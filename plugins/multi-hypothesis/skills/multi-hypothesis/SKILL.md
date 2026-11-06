@@ -2,7 +2,7 @@
 name: multi-hypothesis
 description: |
   Root cause analysis that keeps several competing hypotheses alive and investigates them in parallel with one sub-agent each, looking for disconfirming evidence first, instead of settling on the first plausible cause. Analysis only; no fixes.
-  Use when the cause is unclear and several explanations are plausible, or the user asks for it: "원인 분석", "근본 원인", "왜 이렇게 됐는지", "여러 가능성", "다중 가설", "multi-hypothesis", "multiple working hypotheses", "root cause", "RCA", "postmortem".
+  Use when the cause is unclear and several explanations are plausible, including intermittent or flaky failures nobody can reproduce (flaky tests/CI, "1 in N runs", only some users/requests), or the user asks for it: "원인 분석", "간헐적", "재현 안 됨", "flaky", "근본 원인", "왜 이렇게 됐는지", "여러 가능성", "다중 가설", "multi-hypothesis", "multiple working hypotheses", "root cause", "RCA", "postmortem".
   Do NOT use when one clue already points to a single cause (just debug it), for a quick "why does this line fail" question, or when the user wants a fix rather than an analysis.
 ---
 
