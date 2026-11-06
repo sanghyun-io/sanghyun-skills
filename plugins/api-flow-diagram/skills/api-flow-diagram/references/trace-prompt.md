@@ -1,6 +1,6 @@
-# Call tracing delegation prompt
+# Call tracing prompt
 
-Following FE·BE code screen by screen to the end reads many files. Hand it to `Agent(subagent_type: "general-purpose", model: "sonnet", run_in_background: false)`; main only verifies and renders. Fill in the following and send.
+Following FE·BE code screen by screen to the end reads many files. If your agent can start sub-agents, hand this to one and keep only verification and rendering in the main session (Claude Code: `Agent` with `subagent_type: "general-purpose"`, e.g. `model: "sonnet"`; other agents: their sub-agent or task feature). If not, follow the same prompt yourself as a checklist. Fill in the following.
 
 ```text
 Read-only investigation. No code edits, commits, running servers, DB access, or opening .env.
@@ -28,8 +28,8 @@ Rules
 - Callbacks invoked by external servers (webhooks, etc.) are also calls: m is "EXT" or the actual method, and fe says "external server".
 ```
 
-## What main does after it returns
+## After tracing
 
-1. Open the file:line for the 2–3 claims that decide the conclusion (auth conditions, failure points, branch conditions) and verify directly. Do not copy the agent's report as-is.
+1. Open the file:line for the 2–3 claims that decide the conclusion (auth conditions, failure points, branch conditions) and verify directly. Do not copy a sub-agent's report as-is.
 2. Save the JSON block as `tmp-debug/<name>-flow.json`. Convert field names that differ from the schema (e.g. `auth: "none"` as a string).
 3. Reflect fixes made during verification and anything not verified in `risks`.
