@@ -1,7 +1,7 @@
 {
   "name": "multi-hypothesis",
   "description": "Root cause analysis with several competing hypotheses investigated in parallel by sub-agents, disconfirming evidence first; analysis only.",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "author": {
     "name": "sanghyun-io",
     "email": "ppkimsanh@gmail.com"
