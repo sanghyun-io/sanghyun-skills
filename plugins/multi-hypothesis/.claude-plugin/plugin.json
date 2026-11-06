@@ -1,0 +1,19 @@
+{
+  "name": "multi-hypothesis",
+  "description": "Root cause analysis with multiple working hypotheses investigated in parallel by sub-agents instead of locking onto the first guess.",
+  "version": "1.0.0",
+  "author": {
+    "name": "sanghyun-io",
+    "email": "ppkimsanh@gmail.com"
+  },
+  "homepage": "https://github.com/sanghyun-io/sanghyun-skills/tree/main/plugins/multi-hypothesis",
+  "repository": "https://github.com/sanghyun-io/sanghyun-skills",
+  "license": "MIT",
+  "keywords": [
+    "rca",
+    "root-cause",
+    "debugging",
+    "investigation",
+    "multi-agent"
+  ]
+}

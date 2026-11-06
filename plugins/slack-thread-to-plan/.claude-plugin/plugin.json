@@ -1,0 +1,17 @@
+{
+  "name": "slack-thread-to-plan",
+  "description": "Read a Slack thread from its permalink, extract requirements, and save an implementation plan file for the current project.",
+  "version": "1.0.0",
+  "author": {
+    "name": "sanghyun-io",
+    "email": "ppkimsanh@gmail.com"
+  },
+  "homepage": "https://github.com/sanghyun-io/sanghyun-skills/tree/main/plugins/slack-thread-to-plan",
+  "repository": "https://github.com/sanghyun-io/sanghyun-skills",
+  "license": "MIT",
+  "keywords": [
+    "slack",
+    "requirements",
+    "planning"
+  ]
+}

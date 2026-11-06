@@ -59,7 +59,7 @@ gh repo create plan-subdivider --public --source=. --remote=origin
 # 1. Go to https://github.com/new
 # 2. Create repository named "plan-subdivider"
 # 3. Add remote:
-git remote add origin https://github.com/sanghyun-io/plan-subdivider.git
+git remote add origin https://github.com/sanghyun-io/sanghyun-skills.git
 
 # Push to GitHub
 git branch -M main
@@ -91,7 +91,7 @@ gh release create v1.0.0 \
   --notes-file CHANGELOG.md
 
 # Or create release manually at:
-# https://github.com/sanghyun-io/plan-subdivider/releases/new
+# https://github.com/sanghyun-io/sanghyun-skills/releases/new
 ```
 
 ### 3. Update Plugin Configuration
@@ -101,8 +101,8 @@ Before deploying, update these files with your actual GitHub information:
 #### `.claude-plugin/plugin.json`
 ```json
 {
-  "homepage": "https://github.com/sanghyun-io/plan-subdivider",
-  "repository": "https://github.com/sanghyun-io/plan-subdivider"
+  "homepage": "https://github.com/sanghyun-io/sanghyun-skills",
+  "repository": "https://github.com/sanghyun-io/sanghyun-skills"
 }
 ```
 
@@ -137,10 +137,10 @@ Before publishing, test the plugin via marketplace:
 # In Claude Code session:
 
 # 1. Add marketplace
-/plugin marketplace add sanghyun-io/plan-subdivider
+/plugin marketplace add sanghyun-io/sanghyun-skills
 
 # 2. Install plugin
-/plugin install plan-subdivider@plan-subdivider
+/plugin install plan-subdivider@sanghyun-skills
 
 # 3. Verify installation
 /plugin list
@@ -156,17 +156,17 @@ Users install with two commands:
 
 ```bash
 # 1. Add marketplace (one-time)
-/plugin marketplace add sanghyun-io/plan-subdivider
+/plugin marketplace add sanghyun-io/sanghyun-skills
 
 # 2. Install the plugin
-/plugin install plan-subdivider@plan-subdivider
+/plugin install plan-subdivider@sanghyun-skills
 ```
 
 Or via the UI:
 
 1. Run `/plugin`
 2. Go to **Marketplaces** tab → **Add Marketplace**
-3. Enter: `https://github.com/sanghyun-io/plan-subdivider.git`
+3. Enter: `https://github.com/sanghyun-io/sanghyun-skills.git`
 4. Then install `plan-subdivider` from the plugin list
 
 ## 🧪 Testing Checklist
@@ -205,7 +205,7 @@ After deployment, share your plugin:
 ✅ Sequential navigation
 ✅ Built-in verification
 
-Install: /plugin marketplace add sanghyun-io/plan-subdivider && /plugin install plan-subdivider@plan-subdivider
+Install: /plugin marketplace add sanghyun-io/sanghyun-skills && /plugin install plan-subdivider@sanghyun-skills
 
 #ClaudeCode #ProductivityTools
 ```
@@ -232,8 +232,8 @@ gh release create v1.1.0 --title "v1.1.0" --notes-file CHANGELOG.md
 
 ## 📞 Support
 
-- **Issues**: https://github.com/sanghyun-io/plan-subdivider/issues
-- **Discussions**: https://github.com/sanghyun-io/plan-subdivider/discussions
+- **Issues**: https://github.com/sanghyun-io/sanghyun-skills/issues
+- **Discussions**: https://github.com/sanghyun-io/sanghyun-skills/discussions
 - **Email**: ppkimsanh@gmail.com
 
 ---

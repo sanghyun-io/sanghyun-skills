@@ -21,3 +21,6 @@ test/
 CLAUDE.md
 .claude/
 community-posts/
+
+__pycache__/
+*.pyc

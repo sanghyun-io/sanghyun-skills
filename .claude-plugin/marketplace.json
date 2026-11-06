@@ -1,5 +1,6 @@
 {
-  "name": "plan-subdivider",
+  "name": "sanghyun-skills",
+  "description": "Personal Claude Code skills by sanghyun-io: planning, RCA, API flow diagrams, multi-agent workflows, and skill authoring.",
   "owner": {
     "name": "sanghyun-io",
     "email": "ppkimsanh@gmail.com"
@@ -7,10 +8,92 @@
   "plugins": [
     {
       "name": "plan-subdivider",
-      "source": "./",
+      "source": "./plugins/plan-subdivider",
       "description": "Automatically breaks down large plans into manageable, sequential tasks with built-in checklists, verification steps, and navigation",
       "category": "productivity",
-      "tags": ["planning", "workflow", "task-management", "subdivision", "gtd", "productivity"]
+      "tags": [
+        "planning",
+        "workflow",
+        "task-management",
+        "subdivision",
+        "gtd",
+        "productivity"
+      ]
+    },
+    {
+      "name": "api-flow-diagram",
+      "source": "./plugins/api-flow-diagram",
+      "description": "Trace every API a user journey calls (FE + BE) and render a left-to-right flow diagram HTML with branches, auth, and risk notes per screen/button.",
+      "category": "development",
+      "tags": [
+        "api",
+        "flow-diagram",
+        "frontend",
+        "backend",
+        "audit",
+        "visualization"
+      ]
+    },
+    {
+      "name": "multi-hypothesis",
+      "source": "./plugins/multi-hypothesis",
+      "description": "Root cause analysis with multiple working hypotheses investigated in parallel by sub-agents instead of locking onto the first guess.",
+      "category": "productivity",
+      "tags": [
+        "rca",
+        "root-cause",
+        "debugging",
+        "investigation",
+        "multi-agent"
+      ]
+    },
+    {
+      "name": "session-handoff",
+      "source": "./plugins/session-handoff",
+      "description": "Turn the current session into a handoff prompt that a fresh session can continue from, copied to the clipboard (file or inline fallback).",
+      "category": "productivity",
+      "tags": [
+        "handoff",
+        "session",
+        "context",
+        "continuation"
+      ]
+    },
+    {
+      "name": "skill-scaffolder",
+      "source": "./plugins/skill-scaffolder",
+      "description": "Scaffold or refactor Claude Code skills with progressive disclosure, trigger-rich descriptions, and a references/ layout.",
+      "category": "development",
+      "tags": [
+        "skills",
+        "scaffolding",
+        "authoring",
+        "meta"
+      ]
+    },
+    {
+      "name": "slack-thread-to-plan",
+      "source": "./plugins/slack-thread-to-plan",
+      "description": "Read a Slack thread from its permalink, extract requirements, and save an implementation plan file for the current project.",
+      "category": "productivity",
+      "tags": [
+        "slack",
+        "requirements",
+        "planning"
+      ]
+    },
+    {
+      "name": "team-launch",
+      "source": "./plugins/team-launch",
+      "description": "Manager pattern for running several independent coding tasks in parallel: one worktree and sub-agent per task, then integration checks and ordered merges.",
+      "category": "development",
+      "tags": [
+        "multi-agent",
+        "worktree",
+        "parallel",
+        "team",
+        "git"
+      ]
     }
   ]
 }

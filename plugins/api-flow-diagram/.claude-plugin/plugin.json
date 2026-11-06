@@ -1,0 +1,20 @@
+{
+  "name": "api-flow-diagram",
+  "description": "Trace every API a user journey calls (FE + BE) and render a left-to-right flow diagram HTML with branches, auth, and risk notes per screen/button.",
+  "version": "1.0.0",
+  "author": {
+    "name": "sanghyun-io",
+    "email": "ppkimsanh@gmail.com"
+  },
+  "homepage": "https://github.com/sanghyun-io/sanghyun-skills/tree/main/plugins/api-flow-diagram",
+  "repository": "https://github.com/sanghyun-io/sanghyun-skills",
+  "license": "MIT",
+  "keywords": [
+    "api",
+    "flow-diagram",
+    "frontend",
+    "backend",
+    "audit",
+    "visualization"
+  ]
+}
