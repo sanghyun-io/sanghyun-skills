@@ -1,7 +1,7 @@
 {
   "name": "api-flow-diagram",
   "description": "Trace every API a user journey calls (FE + BE) and render a left-to-right flow diagram HTML with branches, auth, and risk notes per screen/button.",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": {
     "name": "sanghyun-io",
     "email": "ppkimsanh@gmail.com"

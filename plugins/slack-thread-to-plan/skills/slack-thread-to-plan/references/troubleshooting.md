@@ -5,7 +5,7 @@ On failure, stop and report to the user. Do not continue with guessed retries.
 ## By exit code
 
 - **2 argument error** — check the URL is quoted (a query with `&` gets cut by the shell). A missing path after `--files-dir` is also 2.
-- **3 token not set** — the token is exported in `~/.bashrc`, so a PowerShell session may not see it. Only after user confirmation, inject once: `$env:SLACK_USER_TOKEN = "<token>"; python ...`. Never print or echo the token value.
+- **3 token not set** — the variable isn't visible to this shell (e.g. exported only in `~/.bashrc` while commands run in PowerShell). Ask the user to set `SLACK_USER_TOKEN` themselves (shell profile, OS environment, or `env` in Claude Code settings) and restart the session if needed. Never ask them to paste the token into chat (it stays in the session log), and never print or echo it.
 - **4 URL parse failure** — must be a message permalink ("Copy link"), not a channel link or short URL.
 - **5 Slack API error** — `error` in stderr:
   - `not_in_channel` / `channel_not_found` → token account is not a channel member. Join, then retry

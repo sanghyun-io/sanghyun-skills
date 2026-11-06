@@ -2,8 +2,8 @@
 name: api-flow-diagram
 description: |
   Traces a user flow (signup, application, payment, onboarding, etc.) end to end through FE and BE code and produces a left-to-right flow diagram HTML showing which API each screen/button calls. One file holds branch arrows (forward/error/back), FE·BE file:line per endpoint, auth requirements, risk points, and a full endpoint table.
-  Use when the user mentions API 흐름도, 호출 흐름 도식, 화면별 API, 버튼별 엔드포인트, 어떤 API 가 호출되는지 정리, 시퀀스 정리, 흐름 도식화, 플로우차트, API 호출 점검, user flow API map, endpoint flow diagram, call flow chart, or asks to trace every API called during a user journey (FE+BE) and draw it.
-  Do NOT trigger for DB ERD, infra architecture diagrams, or a single endpoint question.
+  Use when the user wants the API calls of a user journey traced and drawn: API 흐름도, API 호출 흐름 도식, 화면별 API, 버튼별 엔드포인트, 어떤 API 가 호출되는지 정리, API 호출 점검, user flow API map, endpoint flow diagram, API call flow chart, or asks to trace every API called during a user journey (FE+BE).
+  Do NOT trigger for generic flowcharts or sequence diagrams unrelated to API calls, DB ERDs, infra architecture diagrams, or a single endpoint question.
 ---
 
 # API Flow Diagram
@@ -23,7 +23,7 @@ Trace one user flow's screens/buttons → API calls → branches in code, and bu
 ## Quick start
 
 ```bash
-S="${CLAUDE_PLUGIN_ROOT}/skills/api-flow-diagram"   # if installed as a user skill: ~/.claude/skills/api-flow-diagram
+S="${CLAUDE_SKILL_DIR}"
 PYTHONIOENCODING=utf-8 python $S/scripts/render.py tmp-debug/<name>-flow.json tmp-debug/<name>-flow.html
 ```
 

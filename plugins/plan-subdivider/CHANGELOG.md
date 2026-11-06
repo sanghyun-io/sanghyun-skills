@@ -15,6 +15,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Estimated time tracking per task
 - Dependency graph visualization
 
+## [2.0.0] - 2026-11-06
+
+### Changed (breaking)
+- Skill renamed `subdivide` -> `plan-subdivide`. Invoke with `/plan-subdivider:plan-subdivide`.
+- The plugin no longer has hooks. It does not copy rule files into `.claude/rules/` on session start, and prints nothing at session start.
+- `rules/plan-structure.md` is now opt-in: copy it yourself to `~/.claude/rules/` or `.claude/rules/` if you want the "always ask before executing a 3+ task plan" rule enforced.
+- The skill reads its own templates and criteria from `skills/plan-subdivide/references/` (it previously pointed at `~/.claude/rules/plan-structure.md`, which the default project-scope install never created).
+- `SKILL.md` cut from 406 to ~40 lines; templates and criteria moved to references. Description now has "Use when" triggers (English and Korean).
+
+### Removed
+- `hooks/hooks.json`, `scripts/install-rules.sh`, `rules/rule-format.md`, `DEPLOYMENT.md`.
+
 ## [1.2.1] - 2026-02-12
 
 ### Fixed

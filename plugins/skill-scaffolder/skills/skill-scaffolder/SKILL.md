@@ -1,14 +1,14 @@
 ---
 name: skill-scaffolder
 description: |
-  Applies this convention when creating a new Claude Code skill or refactoring an existing one.
-  Based on Anthropic's official skill-creator + google/skills best practices. Covers SKILL.md frontmatter, progressive disclosure (references/), trigger sentence writing, and directory structure validation.
-  Use when the user mentions '스킬 만들기', '스킬 작성', '스킬 생성', 'SKILL.md', '커스텀 스킬', '스킬 구조 정리', '스킬 리팩토링', 'skill 스캐폴딩', 'new skill', 'create skill', 'scaffold skill', 'restructure skill', or asks to design/refactor a skill directory. Also triggers when creating a new skill directory or editing an existing SKILL.md is detected.
+  Scaffolds or restructures Claude Code skills: bilingual (Korean + English) trigger-rich descriptions, a short SKILL.md with topic files in references/, explicit split thresholds, and packaging as a shareable plugin (plugin.json, marketplace.json, validation).
+  Use when the user asks to create, scaffold, restructure, split, or publish a skill: '스킬 만들기', '스킬 작성', '스킬 생성', '커스텀 스킬', '스킬 구조 정리', '스킬 리팩토링', '스킬 배포', '플러그인으로 만들기', 'new skill', 'create skill', 'scaffold skill', 'restructure skill', 'publish skill', 'package as plugin'.
+  Do NOT trigger for small edits to an existing SKILL.md (typo, translation, one rule changed). For trigger-accuracy evals and benchmarks, use Anthropic's skill-creator instead.
 ---
 
 # Skill Scaffolder
 
-Meta skill for creating and refactoring skills. Adapts Anthropic `skill-creator` + google/skills conventions to the Claude Code environment (user `~/.claude/skills/`, project `.claude/skills/`).
+Meta skill for creating, restructuring, and packaging skills (user `~/.claude/skills/`, project `.claude/skills/`, or a plugin). It complements Anthropic's `skill-creator`, which covers evals and trigger benchmarking.
 
 ## Structure
 
@@ -38,9 +38,11 @@ skill-name/
 4. In the completion report, list 2-3 expected trigger sample utterances so the user can point out gaps.
 
 For refactoring an existing skill, see [references/refactoring.md](references/refactoring.md).
+To share a skill (repo, marketplace, plugin directory), see [references/packaging.md](references/packaging.md).
 
 ## References
 
 - **Frontmatter**: good/bad description examples, trigger sentence patterns, validation checklist. Read first when writing a new skill. See [references/frontmatter.md](references/frontmatter.md)
 - **Workflow**: step-by-step scaffolding details (split decisions, common mistakes). When actually scaffolding. See [references/workflow.md](references/workflow.md)
 - **Refactoring**: diagnostic criteria + procedure for splitting a single SKILL.md into references/. When reworking an existing skill. See [references/refactoring.md](references/refactoring.md)
+- **Packaging**: plugin/marketplace layout, portable paths (CLAUDE_SKILL_DIR / CLAUDE_PLUGIN_ROOT), what to strip before publishing, validation and isolated install test. When sharing or publishing a skill. See [references/packaging.md](references/packaging.md)
