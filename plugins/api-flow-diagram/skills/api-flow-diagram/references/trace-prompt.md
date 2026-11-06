@@ -1,35 +1,35 @@
-# 호출 추적 위임 프롬프트
+# Call tracing delegation prompt
 
-FE·BE 코드를 화면 단위로 끝까지 따라가는 일은 파일을 많이 읽는다. `Agent(subagent_type: "general-purpose", model: "sonnet", run_in_background: false)` 로 맡기고 메인은 검증과 렌더만 한다. 아래를 채워서 보낸다.
+Following FE·BE code screen by screen to the end reads many files. Hand it to `Agent(subagent_type: "general-purpose", model: "sonnet", run_in_background: false)`; main only verifies and renders. Fill in the following and send.
 
 ```text
-읽기 전용 조사. 코드 수정·커밋·서버 실행·DB 접속·.env 열람 금지.
+Read-only investigation. No code edits, commits, running servers, DB access, or opening .env.
 
-목표: {흐름 이름} 에서 호출되는 모든 API 를 화면·버튼 단위로 전수 정리한다.
-결과는 왼쪽→오른쪽 흐름도(분기 화살표, 각 화면/버튼에 엔드포인트 표기)를 그리는 데 쓴다.
+Goal: list every API called in {flow name}, exhaustively, per screen/button.
+The result is used to draw a left-to-right flow diagram (branch arrows, endpoints marked on each screen/button).
 
-대상
-- 프론트: {FE repo 경로}. 진입점 {라우트/URL/컴포넌트}. {알고 있는 단계 이름들}.
-  각 단계 컴포넌트, store 액션, HTTP 클라이언트 호출을 끝까지 추적하라.
-  진입 가드, 응답 코드별 분기, 확인/취소 모달, 외부 SDK 콜백, 완료 후 이동까지 포함.
-  HTTP 클라이언트 인스턴스가 여러 개면 각각의 헤더·인터셉터(401 처리 등) 차이를 적어라.
-- 백엔드: {BE repo 경로} (커밋 {sha}). 각 엔드포인트의 파일:라인, 인증 요구
-  (before_request, 데코레이터, 내부 current_user 검사 등), 주요 동작 1줄.
-  {특히 확인할 점: 예) 비로그인 흐름에서 401/403 이 날 수 있는 곳}
+Targets
+- Frontend: {FE repo path}. Entry point {route/URL/component}. {known step names}.
+  Trace each step's component, store actions, and HTTP client calls to the end.
+  Include entry guards, branches by response code, confirm/cancel modals, external SDK callbacks, and navigation after completion.
+  If there are multiple HTTP client instances, note differences in headers/interceptors (401 handling, etc.).
+- Backend: {BE repo path} (commit {sha}). For each endpoint: file:line, auth requirement
+  (before_request, decorators, internal current_user checks, etc.), main behavior in 1 line.
+  {Specific concerns: e.g. where 401/403 can occur in the logged-out flow}
 
-출력 (한국어): 마크다운 요약 + 맨 끝에 JSON 블록 하나.
-JSON 은 아래 스키마를 그대로 따른다:
-{data-schema.md 의 최상위·node·call·edges 예시 블록을 붙여 넣는다}
+Output (in the user's language): markdown summary + one JSON block at the very end.
+The JSON follows this schema exactly:
+{paste the top-level, node, call, edges example blocks from data-schema.md}
 
-규칙
-- cols 는 화면 진행 순서(왼→오). 분기가 많은 단계는 "갈래" 열을 따로 둔다.
-- edges 는 실제 코드 조건 기준. label 은 20자 안팎, 자세한 조건은 node.desc.
-- 코드로 확인 못 한 인증은 auth.level "unknown". 추측은 note 에 "(추측)".
-- 외부 서버가 부르는 콜백(webhook 등)도 call 로 넣고 m 은 "EXT" 또는 실제 메서드, fe 에 "외부 서버" 라고 적는다.
+Rules
+- cols follow screen progression order (left→right). Steps with many branches get a separate "branches" column.
+- edges are based on actual code conditions. label ~20 chars; detailed conditions go in node.desc.
+- Auth not confirmed in code: auth.level "unknown". Guesses get "(guess)" in note.
+- Callbacks invoked by external servers (webhooks, etc.) are also calls: m is "EXT" or the actual method, and fe says "external server".
 ```
 
-## 돌아온 뒤 메인이 할 일
+## What main does after it returns
 
-1. 결론을 좌우하는 주장 2~3개(인증 조건, 장애 지점, 분기 조건)는 해당 파일:라인을 직접 열어 확인한다. 에이전트 보고를 그대로 옮기지 않는다.
-2. JSON 블록을 `tmp-debug/<name>-flow.json` 으로 저장한다. 스키마와 다른 필드명(예: `auth: "none"` 문자열)은 변환한다.
-3. 검증하며 고친 내용과 확인 못 한 것은 `risks` 에 반영한다.
+1. Open the file:line for the 2–3 claims that decide the conclusion (auth conditions, failure points, branch conditions) and verify directly. Do not copy the agent's report as-is.
+2. Save the JSON block as `tmp-debug/<name>-flow.json`. Convert field names that differ from the schema (e.g. `auth: "none"` as a string).
+3. Reflect fixes made during verification and anything not verified in `risks`.

@@ -1,7 +1,7 @@
 {
   "name": "slack-thread-to-plan",
   "description": "Read a Slack thread from its permalink, extract requirements, and save an implementation plan file for the current project.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": {
     "name": "sanghyun-io",
     "email": "ppkimsanh@gmail.com"

@@ -1,43 +1,43 @@
-# 요구사항 분석 프레임워크
+# Requirements Analysis Framework
 
-원문 근거가 있는 것만 적고, 추론은 "추정"으로 표시한다.
+Write only what the source supports; mark inferences as "inferred".
 
-## 추출 항목
+## Extract
 
-- 요구사항: 기능 / 비기능(성능·보안·UX·호환성·일정), 명시 vs 추정
-- 맥락: 배경/문제, 합의 사항, 미결 질문, 반대·우려
-- 메타: 우선순위·담당(@멘션)·기한 단서, 참조 자료(첨부, 링크, 이슈/PR 번호)
+- Requirements: functional / non-functional (performance, security, UX, compatibility, schedule), explicit vs inferred
+- Context: background/problem, agreements, open questions, objections/concerns
+- Meta: priority, owner (@mentions), deadline cues, references (attachments, links, issue/PR numbers)
 
-## AskUserQuestion 으로 확정할 것
+## Resolve with AskUserQuestion
 
-요구사항 충돌, 스레드 밖 맥락 의존("그거", "저번에 말한"), 범위 불명확("개선해줘"), 계획에 영향 주는 우선순위·기한 단서 부재. 옵션은 구체적으로, 이모지·장식문자 없이 한글+ASCII.
+Conflicting requirements, dependence on context outside the thread ("that thing", "what I mentioned last time"), unclear scope ("improve it"), missing priority/deadline cues that affect the plan. Make options concrete, plain text only, no emoji or decorative characters.
 
-## 대화창 출력 템플릿
+## Chat output template
 
 ```
-## 스레드 요약
-{3~5줄: 누가, 무엇을, 왜}
+## Thread summary
+{3-5 lines: who, what, why}
 
-## 요구사항
-| # | 구분 | 요구사항 | 근거(인용/작성자) | 명시/추정 |
-|---|------|---------|------------------|----------|
-| R1 | 기능 | ... | "..." — @홍길동 | 명시 |
+## Requirements
+| # | Type | Requirement | Evidence (quote/author) | Explicit/Inferred |
+|---|------|-------------|-------------------------|-------------------|
+| R1 | Functional | ... | "..." — @author | Explicit |
 
-## 합의 / 미결
-- 합의: ...
-- 미결: ... (→ 확인 필요)
+## Agreed / Open
+- Agreed: ...
+- Open: ... (→ needs confirmation)
 
-## 우선순위 · 담당 · 기한
+## Priority · Owner · Deadline
 - ...
 
-## 프로젝트 적용 방안
-| 요구사항 | 적용 위치(파일/모듈) | 방법 | 기존 결정과의 정합성 |
-|---------|---------------------|------|---------------------|
-| R1 | packages/.../x.js | ... | CHECKPOINT §N 과 일치 / 충돌 |
+## Project application plan
+| Requirement | Location (file/module) | Approach | Consistency with existing decisions |
+|-------------|------------------------|----------|-------------------------------------|
+| R1 | packages/.../x.js | ... | Matches / conflicts with CHECKPOINT §N |
 
-## 작업 계획 (초안)
-1. {task} — 의존: 없음 — 검증: {명령/방법}
-2. {task} — 의존: 1 — 검증: ...
+## Work plan (draft)
+1. {task} — depends on: none — verify: {command/method}
+2. {task} — depends on: 1 — verify: ...
 ```
 
-적용 방안은 `CLAUDE.md`, `docs/CHECKPOINT.md`(설계 결정), `docs/WORK_QUEUE.md`(중복/우선순위)를 존중한다. 충돌하면 "CHECKPOINT §N 과 충돌"을 명시하고 판단을 구한다.
+The application plan respects `CLAUDE.md`, `docs/CHECKPOINT.md` (design decisions), `docs/WORK_QUEUE.md` (duplicates/priority). On conflict, state "conflicts with CHECKPOINT §N" and ask for a decision.
