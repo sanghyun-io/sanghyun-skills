@@ -1,14 +1,14 @@
-# Skill 스캐폴딩 워크플로우
+# Skill Scaffolding Workflow
 
-1. **의도·트리거·출력 형식 파악** — 대화에서 이미 드러나면 그대로 진행. 정말 모호할 때만 AskUserQuestion (질문 필드에 이모지·장식 문자 금지 — CLAUDE.md 5.1).
-2. **이름·위치** — kebab-case 이름 제안. 위치 기본은 user level `~/.claude/skills/{name}/`(모든 프로젝트 공유); 특정 프로젝트 전용이 분명하면 `{project}/.claude/skills/{name}/`.
-3. **디렉토리** — `mkdir -p ~/.claude/skills/{name}/references`. `scripts/`·`assets/`는 실제로 필요할 때만.
-4. **SKILL.md** — frontmatter 먼저([frontmatter.md](frontmatter.md)), body는 SKILL.md "규칙"의 순서를 따른다.
-5. **분할 판단** — SKILL.md 300줄 초과 조짐, 한 섹션 코드 샘플 80줄 초과, 토픽 3개 이상 중 하나라도 해당하면 references/로 분리.
-6. **보고** — 생성 경로, 기대 트리거 샘플 발화 2~3개. 새 skill은 다음 세션부터 자동 로드되며, 현재 세션에서 바로 테스트하려면 트리거 키워드가 든 발화를 시도하라고 안내.
+1. **Intent, triggers, output format** — if already clear from the conversation, proceed. Use AskUserQuestion only when truly ambiguous (no emoji or decorative characters in question fields — CLAUDE.md 5.1).
+2. **Name, location** — propose a kebab-case name. Default location is user level `~/.claude/skills/{name}/` (shared across all projects); if clearly specific to one project, `{project}/.claude/skills/{name}/`.
+3. **Directory** — `mkdir -p ~/.claude/skills/{name}/references`. `scripts/`/`assets/` only when actually needed.
+4. **SKILL.md** — frontmatter first ([frontmatter.md](frontmatter.md)); body follows the order in SKILL.md "Rules".
+5. **Split decision** — if any applies: SKILL.md likely to exceed 300 lines, a code sample over 80 lines in one section, or 3+ topics → split into references/.
+6. **Report** — created path, 2-3 expected trigger sample utterances. Tell the user a new skill auto-loads from the next session; to test in the current session, try an utterance containing a trigger keyword.
 
-## 흔한 실수
+## Common mistakes
 
-- description 한 줄로 끝냄 / 트리거 키워드 누락
-- name이 CamelCase이거나 디렉토리명과 불일치
-- 300줄 넘는 단일 SKILL.md, 본문에 코드 샘플 5개 이상
+- description ends at one line / missing trigger keywords
+- name is CamelCase or does not match the directory name
+- single SKILL.md over 300 lines, 5+ code samples in the body

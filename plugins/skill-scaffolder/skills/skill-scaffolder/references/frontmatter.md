@@ -1,41 +1,41 @@
-# Frontmatter 작성 가이드
+# Frontmatter Writing Guide
 
-`description`은 Claude가 skill 호출 여부를 판단하는 유일한 입력이다. 부실하면 트리거되지 않는다.
+`description` is the only input Claude uses to decide whether to invoke a skill. If it is weak, the skill will not trigger.
 
 ```yaml
 ---
-name: kebab-case-name    # 디렉토리명과 동일, 영문 소문자 + 하이픈
+name: kebab-case-name    # same as directory name, lowercase letters + hyphens
 description: |
-  {1-2문장: 무엇을 하는지}
-  Use when the user mentions {한국어 키워드}, {영어 키워드}, or {특정 상황}.
+  {1-2 sentences: what it does}
+  Use when the user mentions {Korean keywords}, {English keywords}, or {specific situation}.
 ---
 ```
 
-## 나쁜 예 / 좋은 예
+## Bad / good examples
 
-- `description: Writes resumes.` — 트리거 조건 없음.
-- `description: 이력서를 작성하는 도구입니다.` — 한국어만, 키워드 없음.
-- `This skill helps you write resumes when needed.` — "when needed"는 트리거 조건이 아님.
+- `description: Writes resumes.` — no trigger condition.
+- `description: 이력서를 작성하는 도구입니다.` ("A tool that writes resumes.") — Korean only, no keywords.
+- `This skill helps you write resumes when needed.` — "when needed" is not a trigger condition.
 
 ```yaml
 description: |
-  채용 공고 URL과 사용자 프로필을 입력받아 맞춤형 이력서/자기소개서 초안을 작성한다.
-  ATS 친화 포맷·STAR 기법·키워드 매칭을 자동 적용.
+  Takes a job posting URL and the user's profile and drafts a tailored resume/cover letter.
+  Automatically applies ATS-friendly format, the STAR method, and keyword matching.
   Use when the user mentions 이력서, 자소서, 자기소개서, 지원서, resume, cover letter, CV,
-  채용 공고 URL을 공유하면서 문서 작성을 요청할 때, or asks to tailor a resume/cover letter
+  shares a job posting URL and asks for a document, or asks to tailor a resume/cover letter
   for a specific job posting.
 ```
 
-## 키워드 원칙
+## Keyword principles
 
-- 한/영 양쪽, 동의어 전부(이력서/자소서/자기소개서/지원서), 동사도 포함("리뷰해", "review").
-- 약간 pushy하게 — 명시적 요청이 없어도 키워드가 나오면 발동하도록.
-- 오발동 우려가 있으면 비-트리거 조건 추가: `Do NOT trigger when ...`.
-- 다중 조건은 `Use when:` 아래 bullet(키워드 / 동작 / 파일 패턴)로 나열해도 된다.
+- Both Korean and English, every synonym (이력서/자소서/자기소개서/지원서), and verbs too ("리뷰해", "review").
+- Be slightly pushy — trigger whenever keywords appear, even without an explicit request.
+- If misfires are a risk, add non-trigger conditions: `Do NOT trigger when ...`.
+- Multiple conditions may be listed as bullets under `Use when:` (keywords / actions / file patterns).
 
-## 체크리스트
+## Checklist
 
-- `name` kebab-case + 디렉토리명 일치
-- 무엇 + 언제 둘 다 포함, "Use when ..." 문장 존재
-- 한/영 키워드 + 동의어
-- 길이 대략 80~600자
+- `name` kebab-case + matches directory name
+- Includes both what + when; a "Use when ..." sentence exists
+- Korean/English keywords + synonyms
+- Length roughly 80-600 characters

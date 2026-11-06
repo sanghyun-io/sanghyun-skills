@@ -1,7 +1,7 @@
 {
   "name": "session-handoff",
   "description": "Turn the current session into a handoff prompt that a fresh session can continue from, copied to the clipboard (file or inline fallback).",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": {
     "name": "sanghyun-io",
     "email": "ppkimsanh@gmail.com"
