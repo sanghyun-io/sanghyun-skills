@@ -1,0 +1,18 @@
+{
+  "name": "skill-scaffolder",
+  "description": "Scaffold or refactor Claude Code skills with progressive disclosure, trigger-rich descriptions, and a references/ layout.",
+  "version": "1.0.0",
+  "author": {
+    "name": "sanghyun-io",
+    "email": "ppkimsanh@gmail.com"
+  },
+  "homepage": "https://github.com/sanghyun-io/sanghyun-skills/tree/main/plugins/skill-scaffolder",
+  "repository": "https://github.com/sanghyun-io/sanghyun-skills",
+  "license": "MIT",
+  "keywords": [
+    "skills",
+    "scaffolding",
+    "authoring",
+    "meta"
+  ]
+}

@@ -1,0 +1,72 @@
+{
+ "title": "예시: 쇼핑몰 회원가입 + 첫 주문 흐름 - 화면/버튼별 API 호출",
+ "meta": [
+  "가상의 예시 데이터. 진입: `https://shop.example.com/signup?ref=...` | FE `shop-web` `src/pages/signup` 외 | BE `shop-api` 커밋 `abc1234` 기준",
+  "가입 직후 로그인 토큰을 발급하고, 결제 API 는 모두 로그인 상태에서 호출한다."
+ ],
+ "legend": [
+  {"text": "공용 HTTP 클라이언트", "tone": "purple", "desc": "401 이면 로그인 화면으로 이동"}
+ ],
+ "cols": [
+  {"title": "진입", "sub": "라우트 가드", "nodes": [
+   {"id": "entry", "kind": "screen", "title": "/signup 진입", "trig": "router.ts:42 (guestOnly)", "desc": "ref 쿼리는 추천 코드", "calls": []},
+   {"id": "home", "kind": "end", "title": "홈으로 이동", "trig": "guard.ts:12", "desc": "이미 로그인 상태면 가입 화면을 보여주지 않는다", "calls": []}
+  ]},
+  {"title": "Step 1", "sub": "회원 정보", "nodes": [
+   {"id": "form", "kind": "screen", "title": "이메일·비밀번호 입력", "trig": "SignupForm.vue:20", "calls": []},
+   {"id": "submit", "kind": "button", "title": "[가입하기] 버튼", "trig": "onSubmit SignupForm.vue:88", "calls": [
+    {"m": "POST", "p": "/api/v1/auth/signup", "fe": "api/auth.ts:14", "be": "routes/auth.py:31", "auth": {"level": "none"},
+     "note": "회원 생성 + 액세스 토큰 발급", "risk": ""}
+   ]}
+  ]},
+  {"title": "Step 2", "sub": "장바구니", "nodes": [
+   {"id": "cart", "kind": "screen", "title": "장바구니 화면", "trig": "CartPage.vue mounted :30", "calls": [
+    {"m": "GET", "p": "/api/v1/cart", "fe": "api/cart.ts:8", "be": "routes/cart.py:12", "auth": {"level": "login"},
+     "tags": [{"text": "공용 HTTP 클라이언트", "tone": "purple"}], "note": "장바구니 상품과 서버 계산 금액"}
+   ]},
+   {"id": "coupon", "kind": "button", "title": "[쿠폰 적용]", "trig": "applyCoupon CartPage.vue:120", "calls": [
+    {"m": "POST", "p": "/api/v1/cart/coupon", "fe": "api/cart.ts:22", "be": "routes/cart.py:58", "auth": {"level": "login"},
+     "note": "쿠폰 검증 후 금액 재계산", "risk": "쿠폰 코드 무차별 대입 제한이 없다 (예시)"}
+   ]}
+  ]},
+  {"title": "Step 3", "sub": "결제", "nodes": [
+   {"id": "order", "kind": "button", "title": "[결제하기] 주문 생성", "trig": "checkout CheckoutPage.vue:75", "calls": [
+    {"m": "POST", "p": "/api/v1/orders", "fe": "api/order.ts:10", "be": "routes/orders.py:20", "auth": {"level": "login"},
+     "note": "서버가 금액을 계산하고 주문번호 발급", "highlight": true, "risk": "예시 강조 지점: 금액은 반드시 서버 계산"}
+   ]},
+   {"id": "pg", "kind": "system", "title": "PG 결제창", "trig": "pg.requestPay CheckoutPage.vue:96", "calls": [
+    {"m": "EXT", "p": "PG requestPay", "fe": "CheckoutPage.vue:96", "be": "외부 PG", "auth": {"level": "none"},
+     "note": "승인 후 PG 서버가 webhook 호출"}
+   ]},
+   {"id": "confirm", "kind": "system", "title": "결제 확정", "trig": "onPaid CheckoutPage.vue:110", "calls": [
+    {"m": "POST", "p": "/api/v1/orders/{id}/confirm", "fe": "api/order.ts:30", "be": "routes/orders.py:64", "auth": {"level": "login"},
+     "note": "서버가 PG 에 직접 조회해 금액·상태 확인"},
+    {"m": "POST", "p": "/api/v1/payments/webhook", "fe": "외부 서버 (PG)", "be": "routes/payments.py:15", "auth": {"level": "cond", "text": "PG 서명 검증"},
+     "note": "PG 조회로 확인된 상태만 반영"}
+   ]}
+  ]},
+  {"title": "완료", "sub": "결과", "nodes": [
+   {"id": "done", "kind": "end", "title": "주문 완료 화면", "trig": "OrderDone.vue", "calls": []},
+   {"id": "fail", "kind": "fail", "title": "결제 실패 안내", "trig": "PayFail.vue", "desc": "재시도 또는 고객센터 안내", "calls": []}
+  ]}
+ ],
+ "edges": [
+  {"from": "entry", "to": "home", "label": "로그인 상태", "type": "err"},
+  {"from": "entry", "to": "form", "label": "비로그인", "type": "fwd"},
+  {"from": "form", "to": "submit", "label": "입력 완료", "type": "fwd"},
+  {"from": "submit", "to": "cart", "label": "201 + 토큰", "type": "fwd"},
+  {"from": "submit", "to": "form", "label": "409 이메일 중복", "type": "back"},
+  {"from": "cart", "to": "coupon", "label": "쿠폰 입력", "type": "fwd"},
+  {"from": "cart", "to": "order", "label": "결제하기", "type": "fwd"},
+  {"from": "coupon", "to": "order", "label": "적용 완료", "type": "fwd"},
+  {"from": "order", "to": "pg", "label": "주문번호 발급", "type": "fwd"},
+  {"from": "pg", "to": "confirm", "label": "승인", "type": "fwd"},
+  {"from": "pg", "to": "fail", "label": "취소 / 실패", "type": "err"},
+  {"from": "confirm", "to": "done", "label": "검증 OK", "type": "fwd"},
+  {"from": "confirm", "to": "fail", "label": "금액 불일치", "type": "err"}
+ ],
+ "risks": [
+  "**예시 데이터:** 실제 서비스가 아니다. 열을 어떻게 나누고 라벨을 얼마나 줄이는지 참고용.",
+  "**쿠폰 적용:** `POST /api/v1/cart/coupon` 에 시도 횟수 제한이 없다는 식으로, 찾은 위험을 근거 파일과 함께 적는다."
+ ]
+}

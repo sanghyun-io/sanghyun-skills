@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>API Flow</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#fff; --ink:#1d2330; --muted:#667085; --line:#d0d5dd;
+    --get:#1570ef; --post:#079455; --put:#dc6803; --patch:#ca8504; --delete:#d92d20; --ext:#7a5af8;
+    --risk:#d92d20; --warn:#dc6803; --fwd:#475467; --err:#d92d20; --back:#98a2b3;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Pretendard","Malgun Gothic",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:13px}
+  header{padding:18px 24px 8px}
+  h1{font-size:19px;margin:0 0 4px}
+  .meta{color:var(--muted);font-size:12px;line-height:1.6}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;padding:8px 24px 4px;align-items:center;color:var(--muted);font-size:12px}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .sw{width:26px;height:0;border-top:2px solid}
+  .controls{padding:4px 24px 10px;display:flex;gap:16px;font-size:12px;color:var(--muted)}
+  #wrap{position:relative;overflow-x:auto;padding:8px 24px 32px}
+  #board{position:relative;display:grid;grid-auto-flow:column;column-gap:168px;align-items:start;width:max-content}
+  .col{display:flex;flex-direction:column;gap:22px;width:268px}
+  .colhead{font-weight:700;font-size:13px;padding:6px 10px;border-radius:6px;background:#e4e7ec;text-align:center}
+  .colhead small{display:block;font-weight:400;color:var(--muted);font-size:11px}
+  .node{position:relative;z-index:2;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:9px 10px;box-shadow:0 1px 2px rgba(16,24,40,.06);transition:opacity .15s}
+  .node.screen{border-left:4px solid #344054}
+  .node.button{border-left:4px solid var(--get)}
+  .node.system{border-left:4px solid var(--ext)}
+  .node.end{border-left:4px solid var(--post)}
+  .node.fail{border-left:4px solid var(--risk)}
+  .node .kind{font-size:10px;color:var(--muted)}
+  .node .title{font-weight:700;margin:2px 0 3px}
+  .node .trig{font-size:11px;color:var(--muted);font-family:Consolas,monospace;word-break:break-all}
+  .call{margin-top:7px;padding:6px 7px;border-radius:6px;background:#f9fafb;border:1px solid #eaecf0}
+  .call.risky{background:#fef3f2;border-color:#fecdca}
+  .call.highlight{background:#fff1f0;border:1.5px solid var(--risk)}
+  .ep{font-family:Consolas,monospace;font-size:12px;word-break:break-all}
+  .m{display:inline-block;font-size:10px;font-weight:700;color:#fff;border-radius:3px;padding:1px 5px;margin-right:4px;background:#667085}
+  .m.GET{background:var(--get)} .m.POST{background:var(--post)} .m.PUT{background:var(--put)}
+  .m.PATCH{background:var(--patch)} .m.DELETE{background:var(--delete)} .m.EXT{background:var(--ext)}
+  .badge{display:inline-block;font-size:10px;border-radius:10px;padding:0 6px;margin:3px 3px 0 0;border:1px solid}
+  .t-green{color:#067647;border-color:#abefc6;background:#ecfdf3}
+  .t-orange{color:var(--warn);border-color:#fedf89;background:#fffaeb}
+  .t-red{color:var(--risk);border-color:#fecdca;background:#fef3f2}
+  .t-blue{color:#175cd3;border-color:#b2ddff;background:#eff8ff}
+  .t-purple{color:#5925dc;border-color:#d9d6fe;background:#f4f3ff}
+  .t-gray{color:#344054;border-color:#d0d5dd;background:#f9fafb}
+  .note{font-size:11px;color:#344054;margin-top:3px}
+  .risk{font-size:11px;color:var(--risk);margin-top:3px}
+  .loc{font-size:10.5px;color:var(--muted);font-family:Consolas,monospace;margin-top:3px;word-break:break-all}
+  svg#edges{position:absolute;left:0;top:0;pointer-events:none;z-index:1;overflow:visible}
+  .elabel{position:absolute;z-index:3;font-size:10.5px;background:rgba(255,255,255,.93);border:1px solid #eaecf0;border-radius:4px;padding:1px 5px;max-width:156px;line-height:1.3;color:#344054;pointer-events:none;transition:opacity .15s}
+  .elabel.err{color:var(--err);border-color:#fecdca}
+  .elabel.back{color:var(--muted);visibility:hidden}
+  .elabel.back.hl,.elabel.hov.hl{visibility:visible}
+  .elabel.hov{visibility:hidden}
+  body.focus .node:not(.hl){opacity:.28}
+  body.focus .elabel:not(.hl){opacity:.12}
+  .hide-back .back{display:none}
+  section{padding:0 24px 28px}
+  h2{font-size:15px;margin:18px 0 8px}
+  table{border-collapse:collapse;width:100%;background:#fff;font-size:12px}
+  th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+  th{background:#f2f4f7}
+  td.mono{font-family:Consolas,monospace;font-size:11.5px;word-break:break-all}
+  ul.risks li{margin:4px 0;line-height:1.55}
+  code{font-family:Consolas,monospace;font-size:.95em;background:#eef0f3;border-radius:3px;padding:0 3px}
+</style>
+</head>
+<body>
+<header>
+  <h1 id="title"></h1>
+  <div class="meta" id="meta"></div>
+</header>
+<div class="legend" id="legend">
+  <span><i class="sw" style="border-color:var(--fwd)"></i>진행</span>
+  <span><i class="sw" style="border-color:var(--err)"></i>오류/실패 갈래</span>
+  <span><i class="sw" style="border-color:var(--back);border-top-style:dashed"></i>되돌아감</span>
+  <span><b class="m GET">GET</b><b class="m POST">POST</b><b class="m EXT">EXT</b> 외부 호출</span>
+  <span><span class="call highlight" style="padding:0 6px;margin:0">빨간 테두리</span> 강조 지점</span>
+</div>
+<div class="controls">
+  <label><input type="checkbox" id="showBack" checked> 되돌아가는 화살표 표시</label>
+  <span>노드에 마우스를 올리면 연결된 갈래만 강조된다.</span>
+</div>
+
+<div id="wrap">
+  <div id="board"></div>
+  <svg id="edges"><defs>
+    <marker id="a-fwd" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#475467"/></marker>
+    <marker id="a-err" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#d92d20"/></marker>
+    <marker id="a-back" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#98a2b3"/></marker>
+  </defs></svg>
+</div>
+
+<section>
+  <h2 id="eptitle">호출 엔드포인트 전체</h2>
+  <table id="eptable"><thead><tr><th>#</th><th>메서드 / 경로</th><th>호출 화면·버튼</th><th>FE 위치</th><th>BE 위치</th><th>인증·태그</th><th>주의</th></tr></thead><tbody></tbody></table>
+  <div id="riskwrap"><h2>점검 결과 / 남은 위험</h2><ul class="risks" id="risks"></ul></div>
+</section>
+
+<script>
+const DATA = /*__DATA__*/null;
+
+const KIND = {screen:"화면", button:"버튼 / 입력", system:"내부 처리", end:"종료 화면", fail:"실패 / 모달"};
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+// `code` 마크업만 허용하는 인라인 텍스트 (meta, risks)
+const inline = s => esc(s).replace(/`([^`]+)`/g, "<code>$1</code>").replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>");
+const AUTH_TONE = {none:"green", cond:"orange", login:"blue", admin:"purple", unknown:"gray"};
+const AUTH_TEXT = {none:"인증 없음", cond:"조건부 인증", login:"로그인 필요", admin:"관리자 필요", unknown:"확인 못 함"};
+const badges = x => {
+  const a = x.auth || {level:"unknown"};
+  let h = `<span class="badge t-${AUTH_TONE[a.level] || "gray"}">${esc(a.text || AUTH_TEXT[a.level] || a.level)}</span>`;
+  (x.tags || []).forEach(t => h += `<span class="badge t-${t.tone || "gray"}">${esc(t.text)}</span>`);
+  return h;
+};
+
+document.title = DATA.title;
+document.getElementById("title").textContent = DATA.title;
+document.getElementById("meta").innerHTML = (DATA.meta || []).map(inline).join("<br>");
+(DATA.legend || []).forEach(l => document.getElementById("legend").insertAdjacentHTML("beforeend",
+  `<span><span class="badge t-${l.tone || "gray"}">${esc(l.text)}</span>${esc(l.desc || "")}</span>`));
+
+const COLS = DATA.cols, EDGES = DATA.edges;
+const board = document.getElementById("board");
+const nodeTitle = {}, nodeCol = {};
+COLS.forEach((col, ci) => {
+  const c = document.createElement("div");
+  c.className = "col";
+  c.innerHTML = `<div class="colhead">${esc(col.title)}<small>${esc(col.sub)}</small></div>`;
+  col.nodes.forEach(n => {
+    nodeTitle[n.id] = n.title; nodeCol[n.id] = ci;
+    const d = document.createElement("div");
+    d.className = "node " + n.kind;
+    d.id = "n-" + n.id;
+    d.innerHTML = `<div class="kind">${KIND[n.kind] || n.kind}</div><div class="title">${esc(n.title)}</div>
+      <div class="trig">${esc(n.trig)}</div>${n.desc ? `<div class="note">${esc(n.desc)}</div>` : ""}
+      ${(n.calls || []).map(x => `<div class="call ${x.highlight ? "highlight" : x.risk ? "risky" : ""}">
+        <div class="ep"><b class="m ${esc(x.m)}">${esc(x.m)}</b>${esc(x.p)}</div>
+        ${badges(x)}
+        ${x.note ? `<div class="note">${esc(x.note)}</div>` : ""}
+        ${x.risk ? `<div class="risk">${esc(x.risk)}</div>` : ""}
+        <div class="loc">FE ${esc(x.fe)}<br>BE ${esc(x.be)}</div></div>`).join("")}`;
+    c.appendChild(d);
+  });
+  board.appendChild(c);
+});
+
+const tbody = document.querySelector("#eptable tbody");
+let cnt = 0;
+COLS.forEach(col => col.nodes.forEach(n => (n.calls || []).forEach(x => {
+  tbody.insertAdjacentHTML("beforeend", `<tr><td>${++cnt}</td>
+    <td class="mono"><b class="m ${esc(x.m)}">${esc(x.m)}</b>${esc(x.p)}</td>
+    <td>${esc(col.title)} - ${esc(n.title)}</td><td class="mono">${esc(x.fe)}</td><td class="mono">${esc(x.be)}</td>
+    <td>${badges(x)}</td><td>${esc(x.risk || x.note)}</td></tr>`);
+})));
+document.getElementById("eptitle").textContent = `호출 엔드포인트 전체 (${cnt}개)`;
+if (DATA.risks && DATA.risks.length)
+  document.getElementById("risks").innerHTML = DATA.risks.map(r => `<li>${inline(r)}</li>`).join("");
+else document.getElementById("riskwrap").remove();
+
+const svg = document.getElementById("edges");
+const labels = [];
+function draw() {
+  svg.querySelectorAll("path.e").forEach(p => p.remove());
+  labels.forEach(l => l.remove()); labels.length = 0;
+  const longCount = EDGES.filter(e => nodeCol[e.to] - nodeCol[e.from] > 1).length;
+  board.style.paddingBottom = (30 + 19 * longCount + 10) + "px";
+  const base = board.getBoundingClientRect();
+  svg.setAttribute("width", board.scrollWidth);
+  svg.setAttribute("height", board.scrollHeight + 60);
+  svg.style.left = board.offsetLeft + "px"; svg.style.top = board.offsetTop + "px";
+  const outCount = {}, inCount = {}, outIdx = {}, inIdx = {};
+  EDGES.forEach(e => { outCount[e.from] = (outCount[e.from] || 0) + 1; inCount[e.to] = (inCount[e.to] || 0) + 1; });
+  const boardBottom = Math.max(...[...board.querySelectorAll(".node")].map(n => n.getBoundingClientRect().bottom)) - base.top;
+  let lane = 0;
+  EDGES.forEach(({from: a, to: b, label, type = "fwd"}) => {
+    const A = document.getElementById("n-" + a).getBoundingClientRect();
+    const B = document.getElementById("n-" + b).getBoundingClientRect();
+    const oi = outIdx[a] = (outIdx[a] || 0) + 1, ii = inIdx[b] = (inIdx[b] || 0) + 1;
+    const oy = A.top - base.top + A.height * oi / (outCount[a] + 1);
+    const iy = B.top - base.top + B.height * ii / (inCount[b] + 1);
+    const sameCol = nodeCol[a] === nodeCol[b];
+    let d, mx, my, anchor;
+    if (nodeCol[b] - nodeCol[a] > 1) {
+      // 두 열 이상 건너뛰는 선: 아래 통로로 내려가 오른쪽으로 달린 뒤 대상 왼쪽으로 올라간다
+      const ly = boardBottom + 30 + 19 * lane++;
+      const x1 = A.left - base.left + 30 + 10 * (oi - 1), y1 = A.bottom - base.top;
+      const x2 = B.left - base.left - 24 - 6 * (ii - 1), x3 = B.left - base.left;
+      d = `M${x1},${y1} L${x1},${ly - 8} Q${x1},${ly} ${x1 + 8},${ly} L${x2 - 8},${ly} Q${x2},${ly} ${x2},${ly - 8} L${x2},${iy + 8} Q${x2},${iy} ${x2 + 8},${iy} L${x3},${iy}`;
+      mx = x1 + 14; my = ly + 8; anchor = "left";
+    } else if (type === "back" || nodeCol[b] < nodeCol[a]) {
+      const x1 = A.left - base.left, x2 = B.right - base.left;
+      d = sameCol ? `M${x1},${oy} C${x1 - 60},${oy} ${x1 - 60},${iy} ${x1},${iy}`
+                  : `M${x1},${oy} C${x1 - 50},${oy} ${x2 + 50},${iy} ${x2},${iy}`;
+      mx = x1 - 8; my = oy; anchor = "right";
+    } else if (sameCol) {
+      const x = A.left - base.left + 18;
+      const y1 = A.bottom - base.top, y2 = B.top - base.top;
+      d = y2 > y1 ? `M${x},${y1} L${x},${y2}`
+                  : `M${A.right - base.left},${oy} C${A.right - base.left + 40},${oy} ${B.right - base.left + 40},${iy} ${B.right - base.left},${iy}`;
+      mx = x + 6; my = (y1 + y2) / 2; anchor = "left";
+    } else {
+      const x1 = A.right - base.left, x2 = B.left - base.left;
+      const k = Math.max(40, (x2 - x1) * 0.45);
+      d = `M${x1},${oy} C${x1 + k},${oy} ${x2 - k},${iy} ${x2},${iy}`;
+      mx = x1 + 6; my = oy; anchor = "left";
+    }
+    const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    p.setAttribute("d", d);
+    p.setAttribute("class", "e " + type);
+    p.dataset.a = a; p.dataset.b = b;
+    p.setAttribute("fill", "none");
+    p.setAttribute("stroke", type === "err" ? "#d92d20" : type === "back" ? "#98a2b3" : "#475467");
+    p.setAttribute("stroke-width", "1.6");
+    if (type === "back") p.setAttribute("stroke-dasharray", "5 4");
+    p.setAttribute("marker-end", `url(#a-${type})`);
+    svg.appendChild(p);
+    if (label) {
+      const l = document.createElement("div");
+      l.className = "elabel " + type + (sameCol && anchor === "left" ? " hov" : "");
+      l.dataset.a = a; l.dataset.b = b;
+      l.textContent = label;
+      board.appendChild(l);
+      l.style.left = (anchor === "right" ? mx - l.offsetWidth : mx) + "px";
+      l.style.top = (my - l.offsetHeight - 2) + "px";
+      labels.push(l);
+    }
+  });
+}
+
+board.addEventListener("mouseover", e => {
+  const n = e.target.closest(".node"); if (!n) return;
+  const id = n.id.slice(2);
+  document.body.classList.add("focus");
+  n.classList.add("hl");
+  svg.querySelectorAll("path.e").forEach(p => {
+    const on = p.dataset.a === id || p.dataset.b === id;
+    p.style.opacity = on ? 1 : .1;
+    if (on) document.getElementById("n-" + (p.dataset.a === id ? p.dataset.b : p.dataset.a)).classList.add("hl");
+  });
+  labels.forEach(l => l.classList.toggle("hl", l.dataset.a === id || l.dataset.b === id));
+});
+board.addEventListener("mouseout", e => {
+  if (e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest(".node") === e.target.closest(".node")) return;
+  document.body.classList.remove("focus");
+  document.querySelectorAll(".hl").forEach(x => x.classList.remove("hl"));
+  svg.querySelectorAll("path.e").forEach(p => p.style.opacity = "");
+});
+document.getElementById("showBack").addEventListener("change", e =>
+  document.body.classList.toggle("hide-back", !e.target.checked));
+window.addEventListener("load", draw);
+window.addEventListener("resize", draw);
+draw();
+</script>
+</body>
+</html>

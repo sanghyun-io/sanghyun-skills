@@ -180,7 +180,7 @@ claude --plugin-dir /path/to/your/plan-subdivider
 
 # Or reinstall from your fork's marketplace
 /plugin marketplace add YOUR-USERNAME/plan-subdivider
-/plugin install plan-subdivider@plan-subdivider
+/plugin install plan-subdivider@sanghyun-skills
 
 # Verify
 /plugin list

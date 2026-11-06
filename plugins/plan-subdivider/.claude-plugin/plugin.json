@@ -6,8 +6,8 @@
     "name": "sanghyun-io",
     "email": "ppkimsanh@gmail.com"
   },
-  "homepage": "https://github.com/sanghyun-io/plan-subdivider",
-  "repository": "https://github.com/sanghyun-io/plan-subdivider",
+  "homepage": "https://github.com/sanghyun-io/sanghyun-skills/tree/main/plugins/plan-subdivider",
+  "repository": "https://github.com/sanghyun-io/sanghyun-skills",
   "license": "MIT",
   "keywords": ["planning", "workflow", "task-management", "subdivision", "rules", "subdivider", "gtd", "productivity"]
 }

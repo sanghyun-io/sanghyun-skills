@@ -2,9 +2,9 @@
 
 > **복잡한 계획을 구조화된 실행 가능한 작업으로 자동 변환**
 
-[![Version](https://img.shields.io/badge/version-1.2.0-blue.svg)](https://github.com/sanghyun-io/plan-subdivider)
+[![Version](https://img.shields.io/badge/version-1.2.0-blue.svg)](https://github.com/sanghyun-io/sanghyun-skills)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![GitHub Stars](https://img.shields.io/github/stars/sanghyun-io/plan-subdivider?style=social)](https://github.com/sanghyun-io/plan-subdivider/stargazers)
+[![GitHub Stars](https://img.shields.io/github/stars/sanghyun-io/sanghyun-skills?style=social)](https://github.com/sanghyun-io/sanghyun-skills/stargazers)
 
 [English](README.md) | **한국어**
 
@@ -64,17 +64,17 @@
 
 ```bash
 # 마켓플레이스 추가
-/plugin marketplace add sanghyun-io/plan-subdivider
+/plugin marketplace add sanghyun-io/sanghyun-skills
 
 # 플러그인 설치
-/plugin install plan-subdivider@plan-subdivider
+/plugin install plan-subdivider@sanghyun-skills
 ```
 
 **방법 B: UI**
 
 1. `/plugin` 실행
 2. **Marketplaces** 탭 → **"Add Marketplace"** 클릭
-3. 입력: `https://github.com/sanghyun-io/plan-subdivider.git`
+3. 입력: `https://github.com/sanghyun-io/sanghyun-skills.git`
 4. 플러그인 목록에서 `plan-subdivider` 설치
 
 끝! 플러그인이 첫 실행 시 자동으로 규칙을 `.claude/rules/`에 설치합니다.
@@ -262,13 +262,13 @@ plan-subdivider/
 
 ```bash
 # 전역 (기본값) - 모든 프로젝트에서 사용 가능
-/plugin install plan-subdivider@plan-subdivider
+/plugin install plan-subdivider@sanghyun-skills
 
 # 프로젝트 - 팀과 git으로 공유
-/plugin install plan-subdivider@plan-subdivider --scope project
+/plugin install plan-subdivider@sanghyun-skills --scope project
 
 # 로컬 - 프로젝트 전용, gitignored
-/plugin install plan-subdivider@plan-subdivider --scope local
+/plugin install plan-subdivider@sanghyun-skills --scope local
 ```
 
 ### 세분화 기준
@@ -371,7 +371,7 @@ mongodb-to-postgres/
 
 ```bash
 # 플러그인을 재설치하여 규칙 설치 트리거
-/plugin install plan-subdivider@plan-subdivider
+/plugin install plan-subdivider@sanghyun-skills
 ```
 
 ### `/subdivide`가 인식되지 않음
@@ -442,8 +442,8 @@ MIT License - 자세한 내용은 [LICENSE](LICENSE)를 참조하세요.
 
 ## 📞 지원
 
-- **이슈**: [GitHub Issues](https://github.com/sanghyun-io/plan-subdivider/issues)
-- **토론**: [GitHub Discussions](https://github.com/sanghyun-io/plan-subdivider/discussions)
+- **이슈**: [GitHub Issues](https://github.com/sanghyun-io/sanghyun-skills/issues)
+- **토론**: [GitHub Discussions](https://github.com/sanghyun-io/sanghyun-skills/discussions)
 - **이메일**: ppkimsanh@gmail.com
 
 ---
