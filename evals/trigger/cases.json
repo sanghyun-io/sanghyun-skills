@@ -1,0 +1,155 @@
+{
+ "_comment": "Trigger evals. expect = skill name that should be invoked, or null when no skill from this repo should be invoked. All repo skills are installed in every trial so they compete, as in real use.",
+ "cases": [
+  {
+   "id": "afd-pos-1",
+   "expect": "api-flow-diagram",
+   "prompt": "회원가입 화면에서 버튼 누를 때마다 어떤 API 가 호출되는지 FE/BE 코드 다 따라가서 흐름도로 그려줘. 코드는 /app 에 있어."
+  },
+  {
+   "id": "afd-pos-2",
+   "expect": "api-flow-diagram",
+   "prompt": "Map every endpoint the checkout page calls, from the frontend in /app/frontend through the backend in /app/backend, and draw it as a flow diagram."
+  },
+  {
+   "id": "afd-pos-3",
+   "expect": "api-flow-diagram",
+   "prompt": "주문 흐름에서 화면별로 호출되는 API 정리해서 도식화해줘. /app 에 프론트랑 백엔드 있음."
+  },
+  {
+   "id": "afd-pos-4",
+   "expect": "api-flow-diagram",
+   "prompt": "Trace which API each button in the signup wizard hits (code in /app) and give me a call flow chart per screen."
+  },
+  {
+   "id": "afd-pos-5",
+   "expect": "api-flow-diagram",
+   "prompt": "주문 취소 흐름 API 호출 점검해줘. 화면별 엔드포인트랑 인증 여부까지 흐름도로 보고 싶어. 코드는 /app."
+  },
+  {
+   "id": "afd-neg-1",
+   "expect": null,
+   "prompt": "로그인 화면 사용자 흐름을 간단한 플로우차트로 그려줘. API 는 신경 안 써도 돼, 화면 이동만."
+  },
+  {
+   "id": "afd-neg-2",
+   "expect": null,
+   "prompt": "Draw an ERD for the orders and users tables defined in /app/backend/models.py."
+  },
+  {
+   "id": "afd-neg-3",
+   "expect": null,
+   "prompt": "/app/backend/routes/orders.py 의 GET /api/orders/{id} 가 뭘 반환하는지만 알려줘."
+  },
+  {
+   "id": "afd-neg-4",
+   "expect": null,
+   "prompt": "Write a generic mermaid sequence diagram of the OAuth 2.0 authorization code flow."
+  },
+  {
+   "id": "afd-neg-5",
+   "expect": null,
+   "prompt": "인프라 아키텍처 다이어그램 그려줘: ALB 뒤에 ECS 서비스 2개, RDS MySQL 하나, S3 버킷."
+  },
+  {
+   "id": "mh-pos-1",
+   "expect": "multi-hypothesis",
+   "prompt": "배포 후에 일부 사용자만 간헐적으로 401 이 나. 재현도 잘 안 되고 원인을 모르겠어. 여러 가능성 다 열어 두고 원인 분석해줘."
+  },
+  {
+   "id": "mh-pos-2",
+   "expect": "multi-hypothesis",
+   "prompt": "Root cause analysis please: p99 latency doubled since Tuesday but CPU, memory and traffic are flat. A deploy, a DB migration and a CDN config change all happened that week."
+  },
+  {
+   "id": "mh-pos-3",
+   "expect": "multi-hypothesis",
+   "prompt": "야간 배치가 3일에 한 번꼴로 실패하는데 근본 원인 좀 찾아줘. 로그엔 타임아웃만 찍혀 있고 실패하는 날 공통점이 안 보여."
+  },
+  {
+   "id": "mh-pos-4",
+   "expect": "multi-hypothesis",
+   "prompt": "Do an RCA on why some payment webhook events get processed twice. It started last month and only affects a few percent of events. Consider multiple hypotheses."
+  },
+  {
+   "id": "mh-pos-5",
+   "expect": "multi-hypothesis",
+   "prompt": "결제 금액이 가끔 0원으로 저장되는 문제가 있어. 언제 생기는지 패턴이 없어. 다중 가설로 원인 분석해줘, 고치지는 말고."
+  },
+  {
+   "id": "mh-neg-1",
+   "expect": null,
+   "prompt": "이 에러 왜 나? TypeError: Cannot read properties of undefined (reading 'map') at OrderList.jsx:42 — 파일은 /app/frontend/src/OrderList.jsx"
+  },
+  {
+   "id": "mh-neg-2",
+   "expect": null,
+   "prompt": "Fix the off-by-one in /app/backend/utils/paginate.py: the last page is always missing."
+  },
+  {
+   "id": "mh-neg-3",
+   "expect": null,
+   "prompt": "/app/backend/utils/text.py 의 normalize() 가 왜 항상 None 을 반환하지?"
+  },
+  {
+   "id": "mh-neg-4",
+   "expect": null,
+   "prompt": "Summarize what the code in /app/backend does in five bullet points."
+  },
+  {
+   "id": "mh-neg-5",
+   "expect": null,
+   "prompt": "로그인하면 401 나는 거 그냥 고쳐줘. 원인은 알아, /app/backend/auth.py 에 토큰 만료 체크가 반대로 돼 있어."
+  },
+  {
+   "id": "afd-edge-1",
+   "expect": null,
+   "prompt": "결제 API 흐름 간단히 말로만 설명해줘. 그림이나 파일은 필요 없어. 코드는 /app."
+  },
+  {
+   "id": "afd-edge-2",
+   "expect": "api-flow-diagram",
+   "prompt": "/app/frontend/src/pages/Checkout.vue 에서 버튼별로 어떤 API 가 어떤 순서로 불리는지, 백엔드 라우트까지 이어서 다이어그램으로 보여줘."
+  },
+  {
+   "id": "afd-edge-3",
+   "expect": null,
+   "prompt": "/app/frontend/src/api.js 에서 Authorization 헤더가 어떻게 붙는지만 설명해줘."
+  },
+  {
+   "id": "afd-edge-4",
+   "expect": "api-flow-diagram",
+   "prompt": "비로그인 상태로 가입하고 결제하다가 401 이 났대. 가입부터 결제까지 화면에서 부르는 API 를 전부 점검해서 인증 필요 여부랑 같이 화면별로 정리해줘. 코드는 /app."
+  },
+  {
+   "id": "mh-edge-1",
+   "expect": null,
+   "prompt": "이 에러 원인 찾아줘: KeyError: 'price' at /app/backend/routes/orders.py line 13, in create_order"
+  },
+  {
+   "id": "mh-edge-2",
+   "expect": "multi-hypothesis",
+   "prompt": "회원가입 전환율이 지난주부터 30% 떨어졌어. 그 주에 프론트 배포, 이메일 인증 서비스 교체, 광고 채널 변경이 다 있었어. 뭐 때문인지 알아내야 해."
+  },
+  {
+   "id": "mh-edge-3",
+   "expect": null,
+   "prompt": "/app/backend/routes/orders.py 의 get_order 가 항상 total 0 을 돌려주는 거 고쳐줘."
+  },
+  {
+   "id": "mh-edge-4",
+   "expect": "multi-hypothesis",
+   "prompt": "About 1 in 50 CI runs fails in test_checkout with a connection reset. Nobody can reproduce it locally. Figure out why before anyone touches the code."
+  },
+  {
+   "id": "afd-edge-5",
+   "expect": null,
+   "prompt": "신규 사용자 온보딩 절차를 흐름 도식화해줘. 온보딩 문서에 넣을 그림이라 사용자 단계만 있으면 돼, 시스템 내부는 빼고."
+  },
+  {
+   "id": "afd-edge-6",
+   "expect": null,
+   "prompt": "/app/backend/models.py 의 주문 상태(pending, paid, cancelled) 전이를 플로우차트로 그려줘."
+  }
+ ]
+}
