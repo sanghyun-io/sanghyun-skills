@@ -1,6 +1,6 @@
 # Skill Scaffolding Workflow
 
-1. **Intent, triggers, output format** — if already clear from the conversation, proceed. Use AskUserQuestion only when truly ambiguous (no emoji or decorative characters in question fields — CLAUDE.md 5.1).
+1. **Intent, triggers, output format** — if already clear from the conversation, proceed. Use AskUserQuestion only when truly ambiguous (plain text in question fields, no emoji or decorative characters).
 2. **Name, location** — propose a kebab-case name. Default location is user level `~/.claude/skills/{name}/` (shared across all projects); if clearly specific to one project, `{project}/.claude/skills/{name}/`.
 3. **Directory** — `mkdir -p ~/.claude/skills/{name}/references`. `scripts/`/`assets/` only when actually needed.
 4. **SKILL.md** — frontmatter first ([frontmatter.md](frontmatter.md)); body follows the order in SKILL.md "Rules".

@@ -2,7 +2,7 @@
 name: slack-thread-to-plan
 description: |
   Takes a Slack thread permalink URL, reads the whole thread (parent + all replies) via the conversations.replies API,
-  analyzes the requirements, and saves a work plan for applying them to the current project as a Plan file in plan-structure format.
+  analyzes the requirements, and saves a work plan for applying them to the current project as a Plan file (same layout plan-subdivider uses).
   Use when the user mentions 슬랙 스레드, 슬랙 대화, Slack 스레드, Slack thread, 슬랙 요구사항, 스레드 분석,
   or shares a Slack link asking "이거 분석해줘 / 요구사항 정리해줘 / 작업 계획 세워줘" (analyze this / organize requirements / make a work plan),
   or shares a slack.com/archives/... permalink and asks to analyze it, extract requirements, or build a work plan.
@@ -25,17 +25,19 @@ Principles:
 
 - Env var `SLACK_USER_TOKEN` (xoxp-). Scopes: `channels:history` `groups:history` `im:history` `mpim:history` `users:read`
 - The token owner must be a member of the channel (including private/DM)
-- Exported in `~/.bashrc`, but may be invisible depending on the shell → on failure see [troubleshooting](references/troubleshooting.md)
+- The variable must be visible to the shell Claude runs commands in (shell profile, or `env` in Claude Code settings). If missing, see [troubleshooting](references/troubleshooting.md); never ask the user to paste the token into chat.
 
 ## Fetch
 
-Run with the PowerShell tool (in Bash, `$SLACK_USER_TOKEN` is sometimes empty):
+Windows (PowerShell):
 
 ```powershell
-$env:PYTHONIOENCODING="utf-8"; python "${CLAUDE_PLUGIN_ROOT}/skills/slack-thread-to-plan/scripts/fetch_thread.py" "<SLACK_PERMALINK_URL>"
+$env:PYTHONIOENCODING="utf-8"; python "${CLAUDE_SKILL_DIR}/scripts/fetch_thread.py" "<SLACK_PERMALINK_URL>"
 ```
 
-- `PYTHONIOENCODING=utf-8` is required — without it, a cp949 console exits with `UnicodeEncodeError` on Korean/em-dash (actually happened). The PowerShell tool resets env on every call, so prefix it every time.
+macOS/Linux: `PYTHONIOENCODING=utf-8 python "${CLAUDE_SKILL_DIR}/scripts/fetch_thread.py" "<SLACK_PERMALINK_URL>"`
+
+- Keep `PYTHONIOENCODING=utf-8`: on a non-UTF-8 console (e.g. Windows cp949) the script otherwise exits with `UnicodeEncodeError` on non-ASCII text. Tool shells may reset env per call, so prefix it every time.
 - Output: cleaned markdown (author name, time, body, attachments, reactions; mentions replaced with names). Raw JSON with `--json`.
 - Image attachments are metadata only by default. If content is needed, use `--download-files [--files-dir <DIR>]` (default `./slack-files`), then Read them.
 - Quote the URL (query contains `&`). `?thread_ts=` in a reply permalink is automatically resolved to the parent.
@@ -47,9 +49,9 @@ $env:PYTHONIOENCODING="utf-8"; python "${CLAUDE_PLUGIN_ROOT}/skills/slack-thread
 3. **Analyze requirements** — per the [analysis-framework](references/analysis-framework.md) checklist. Ambiguities via AskUserQuestion.
 4. **Application plan** — read the project's `CLAUDE.md`, `docs/CHECKPOINT.md`, `docs/WORK_QUEUE.md` (if present) and map each requirement to files/modules/layers. If it conflicts with an existing decision, state it and ask for a decision.
 5. **Work plan** — ordered tasks (with dependencies and verification method). Print a summary in chat first.
-6. **Save Plan** — after user confirmation, to `~/.claude/plans\{plan-name}.md`. Format/split rules in [plan-output](references/plan-output.md). For multi-file changes, confirm via AskUserQuestion whether to run `/review` (never skip on your own).
+6. **Save Plan** — after user confirmation, to `~/.claude/plans/{plan-name}.md`. Format/split rules in [plan-output](references/plan-output.md). For multi-file changes, if a plan-review command is available, ask via AskUserQuestion whether to run it (never skip on your own).
 7. **Ask next action (required, skill exit point)** — via AskUserQuestion, not plain text. Labels/descriptions in plain text only, no emoji or decorative characters. Add/remove options as fits:
-   - Start implementing now (Recommended) — per Pre-work rules, create worktree (`.claude/worktrees/`) → read code → implement
+   - Start implementing now (Recommended) — create a branch or worktree the way the project prefers → read code → implement
    - Stop here — one line with the Plan path
    - Create GitHub Issue — Plan summary as an Issue (`gh issue create`)
    - Add to WORK_QUEUE — insert into the `docs/WORK_QUEUE.md` pending queue

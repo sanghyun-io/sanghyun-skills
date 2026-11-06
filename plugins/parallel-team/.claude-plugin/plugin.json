@@ -1,0 +1,19 @@
+{
+  "name": "parallel-team",
+  "description": "Manager pattern for running several independent coding tasks in parallel: one worktree and sub-agent per task, then integration checks and ordered merges.",
+  "version": "2.0.0",
+  "author": {
+    "name": "sanghyun-io",
+    "email": "ppkimsanh@gmail.com"
+  },
+  "homepage": "https://github.com/sanghyun-io/sanghyun-skills/tree/main/plugins/parallel-team",
+  "repository": "https://github.com/sanghyun-io/sanghyun-skills",
+  "license": "MIT",
+  "keywords": [
+    "multi-agent",
+    "worktree",
+    "parallel",
+    "team",
+    "git"
+  ]
+}

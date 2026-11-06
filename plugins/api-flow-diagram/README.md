@@ -18,8 +18,9 @@ The layout code is fixed (`assets/template.html`); only a data JSON changes. `sc
 ## Usage
 
 ```bash
-python "${CLAUDE_PLUGIN_ROOT}/skills/api-flow-diagram/scripts/render.py" flow.json flow.html
-python "${CLAUDE_PLUGIN_ROOT}/skills/api-flow-diagram/scripts/render.py" --self-test
+# <skill dir> = ~/.claude/plugins/cache/sanghyun-skills/api-flow-diagram/<version>/skills/api-flow-diagram
+python "<skill dir>/scripts/render.py" flow.json flow.html
+python "<skill dir>/scripts/render.py" --self-test
 ```
 Try it with the bundled example: `assets/example-shop.json` (a fictional sign-up and first order flow).
 

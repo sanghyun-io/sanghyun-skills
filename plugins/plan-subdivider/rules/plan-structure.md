@@ -13,7 +13,7 @@ triggers:
 
 # Plan Structure Rules
 
-Rules for structuring plans.
+Optional, opt-in rule. The plugin does not install it. Copy it to `~/.claude/rules/` (all projects) or `.claude/rules/` (one project) if you want Claude to be *forced* to ask about subdividing before executing any plan with 3+ tasks. Without it, the `plan-subdivide` skill still offers this based on its description.
 
 ---
 
@@ -27,8 +27,8 @@ Rules for structuring plans.
 
 | Order | Check | Condition | Action |
 |:-----:|-------|-----------|--------|
-| 1 | Task count | Task ≥ 3 | Confirm whether to run `/subdivide` **using AskUserQuestion** |
-| 2 | Complexity | Multi-file changes | Confirm whether to run `/review` **using AskUserQuestion** |
+| 1 | Task count | Task ≥ 3 | Confirm whether to run `/plan-subdivider:plan-subdivide` **using AskUserQuestion** |
+| 2 | Complexity | Multi-file changes | Confirm whether to run a plan review (your review command, if any) **using AskUserQuestion** |
 | 3 | Pre-work complete | - | Then begin actual implementation |
 
 #### ✅ AskUserQuestion Usage (Required)
@@ -38,8 +38,8 @@ Rules for structuring plans.
 ##### Scope
 
 **Cases where AskUserQuestion is required**:
-1. **Pre-work confirmation**: Whether to run `/subdivide`, `/review` before plan execution
-2. **In-skill confirmation**: Subdivision plan approval during `/subdivide`, next step selection after completion
+1. **Pre-work confirmation**: Whether to run `/plan-subdivider:plan-subdivide`, a plan review (your review command, if any) before plan execution
+2. **In-skill confirmation**: Subdivision plan approval during `/plan-subdivider:plan-subdivide`, next step selection after completion
 3. **Progress confirmation**: All decision points with multiple choices
 4. **Dangerous operations**: Before irreversible operations such as file deletion or overwriting
 
@@ -53,7 +53,7 @@ Rules for structuring plans.
     "multiSelect": false,
     "options": [
       {"label": "Skip and start now", "description": "Begin implementation without Pre-work"},
-      {"label": "Run /subdivide", "description": "Subdivide the plan into detailed task files"},
+      {"label": "Run /plan-subdivider:plan-subdivide", "description": "Subdivide the plan into detailed task files"},
       {"label": "Run /review", "description": "Review the plan"}
     ]
   }]
@@ -62,7 +62,7 @@ Rules for structuring plans.
 
 ##### In-skill Confirmation Example
 
-Subdivision plan approval in `/subdivide` skill:
+Subdivision plan approval in `/plan-subdivider:plan-subdivide` skill:
 ```json
 {
   "questions": [{
@@ -95,7 +95,7 @@ Subdivision plan approval in `/subdivide` skill:
 - Starting code reading/implementation without Pre-work
 - Even when a plan execution is requested in a new session, Pre-work must be performed first
 - Jumping straight into implementation after reading a Plan file
-- **Claude must NOT decide to skip `/subdivide` or `/review` on its own**
+- **Claude must NOT decide to skip `/plan-subdivider:plan-subdivide` or a plan review (your review command, if any) on its own**
   - Cannot skip for reasons like "already detailed enough", "clearly separated", "well-structured"
   - When conditions are met, you **must ask** the user whether to run them
   - Skip is only allowed when the user explicitly answers "no"
@@ -108,8 +108,8 @@ Subdivision plan approval in `/subdivide` skill:
 
 | Skill | Trigger Condition | Execution Mode | Description |
 |-------|-------------------|:--------------:|-------------|
-| `/subdivide` | Task ≥ 3 AND Plan execution starting (Pre-work) | confirm | Subdivide plan into detailed task files |
-| `/review` | Multi-file changes AND Plan execution starting (Pre-work) | confirm | Review plan |
+| `/plan-subdivider:plan-subdivide` | Task ≥ 3 AND Plan execution starting (Pre-work) | confirm | Subdivide plan into detailed task files |
+| your plan-review command (if you have one) | Multi-file changes AND Plan execution starting (Pre-work) | confirm | Review plan |
 | `/plan` | When a new plan is needed | auto | Create plan |
 
 **Execution mode descriptions**:
@@ -122,7 +122,7 @@ Subdivision plan approval in `/subdivide` skill:
 - When the condition (Task ≥ 3) is met, you **must always ask the user**
 - Skip is only allowed when the user explicitly answers "skip", "no", "not needed", etc.
 
-**⛔ Important**: `/subdivide` and `/review` are the **first actions (Pre-work)** of plan execution and must be confirmed before reading code or beginning implementation.
+**⛔ Important**: `/plan-subdivider:plan-subdivide` and a plan review (your review command, if any) are the **first actions (Pre-work)** of plan execution and must be confirmed before reading code or beginning implementation.
 
 <!-- @/linked-skills -->
 
@@ -318,5 +318,3 @@ If a checklist item needs a code example, include it with indentation:
 
 ---
 
-*This rule is automatically referenced by Plan mode and other plan-writing agents.*
-*Last modified: 2026-02-05*

@@ -22,7 +22,7 @@ Write a handoff that lets a new session take over the current work without a gap
 
 - Write the body **from the current conversation context only**. Do not Read/Grep/Bash sources to fill it in — if unknown, write `(needs check)`. When this skill is needed, tools may be unstable; the new session does the checking.
 - Do not summarize. If it's needed to continue, include it even if long.
-- NEXT ACTION must be concrete down to file:line and commands. Environment state (worktree/branch/port/run commands) is mandatory (this user uses worktrees heavily).
+- NEXT ACTION must be concrete down to file:line and commands. Environment state (worktree/branch/port/run commands) is mandatory.
 - No code edits or commits. The only file written is the tier-2 handoff `.md`.
 
 ## Delivery (top-down, stop at first success — on failure, don't drag out retries; go straight to the next tier)
@@ -45,8 +45,8 @@ HANDOFF_EOF
 - Report: "Copied the full handoff to the clipboard. In the new session, Ctrl+V then Enter." The clipboard is volatile, so you may add one line: "Save it to a file too?" (tier 2 if requested).
 - A body line starting with `'@` breaks the here-string → put a space before it, or go to tier 2.
 
-**2. File (if 1 fails)** — Write to `~/.claude/handoffs\<slug>.md` (slug = task topic in kebab-case, `handoff-latest` if unclear; same slug overwrites). Report: the path + a one-liner for the new session:
-`Read the previous session's handoff file and continue as-is (start with "NEXT ACTION"): ~/.claude/handoffs\<slug>.md`
+**2. File (if 1 fails)** — Write to `~/.claude/handoffs/<slug>.md` (slug = task topic in kebab-case, `handoff-latest` if unclear; same slug overwrites). Report: the path + a one-liner for the new session:
+`Read the previous session's handoff file and continue as-is (start with "NEXT ACTION"): ~/.claude/handoffs/<slug>.md`
 
 **3. Inline (tools degraded — calls leaking as plain text)** — Print the full text in a single code fence, followed by one line: "Paste the block above into a new session."
 
@@ -87,10 +87,3 @@ Take over the context below as-is and continue the work. Start with "NEXT ACTION
 ## 8. User constraints & preferences established this session
 - Rules/preferences that must be followed (e.g. banned libraries, worktree rules):
 ```
-
-## Reducing recurrence of degradation (reference)
-
-Tool calls leaking as plain text is a model-level phenomenon at high context (`anthropics/claude-code#64108`, open; the harness is fail-closed, so leaked XML is not executed). Settings can't fully block it, only reduce frequency:
-- `/clear` is most reliable — if tool calls leak twice in a row, produce a handoff and `/clear`. `/compact` is second-best (the compacted block itself can be a trigger).
-- For long sessions use Fable/Sonnet instead of Opus (Opus is most vulnerable — it handles larger context and hits the threshold first; Fable has lower frequency).
-- Read big files by line range, split big tasks into subagents. Slim down huge CLAUDE.md/rules.

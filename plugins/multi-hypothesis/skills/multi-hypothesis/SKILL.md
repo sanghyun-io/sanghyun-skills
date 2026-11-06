@@ -1,72 +1,60 @@
 ---
 name: multi-hypothesis
 description: |
-  RCA (Root Cause Analysis) method that digs deep into multiple cause hypotheses in parallel.
-  Instead of settling on the first hypothesis, repeatedly ask "what if this isn't the cause?" and trace multiple hypotheses to the end simultaneously.
-  TRIGGER: utterances like "원인 분석" (cause analysis), "근본 원인" (root cause), "왜 이렇게 됐는지" (why did this happen), "여러 가능성" (multiple possibilities), "다중 가설" (multiple hypotheses), "multi-hypothesis", "multiple working hypotheses", "root cause", "RCA".
-  Structure: Opus manager + Sonnet teammates investigating in parallel + Codex delegation (via Sonnet). Spawn one general-purpose Agent per hypothesis in parallel (team forms automatically on first spawn; v2.1.178+).
-invocation:
-  command: multi-hypothesis
-  user_invocable: true
-  args:
-    - name: symptom
-      description: Symptom/observation/problem to analyze (if omitted, ask the user)
-      required: false
+  Root cause analysis that keeps several competing hypotheses alive and investigates them in parallel with one sub-agent each, looking for disconfirming evidence first, instead of settling on the first plausible cause. Analysis only; no fixes.
+  Use when the cause is unclear and several explanations are plausible, or the user asks for it: "원인 분석", "근본 원인", "왜 이렇게 됐는지", "여러 가능성", "다중 가설", "multi-hypothesis", "multiple working hypotheses", "root cause", "RCA", "postmortem".
+  Do NOT use when one clue already points to a single cause (just debug it), for a quick "why does this line fail" question, or when the user wants a fix rather than an analysis.
 ---
 
 # Multi-Hypothesis RCA
 
-Basis: T.C. Chamberlin (1890), *The Method of Multiple Working Hypotheses*: don't get attached to the first hypothesis; keep several alive and trace them all to the end simultaneously. **Analysis-only skill: do not propose recovery/fixes** (RCA memory feedback).
+Basis: T.C. Chamberlin (1890), *The Method of Multiple Working Hypotheses*: don't get attached to the first explanation; keep several alive and trace each to the end. **Analysis only: do not propose recovery or fixes.**
+
+## Cost check first
+
+This spawns 3-5 agents. Use it only when it pays off:
+- Fewer than 3 independent, plausible hypotheses → investigate directly instead.
+- The symptom reproduces locally and the stack trace points at one place → debug normally.
+- Otherwise say up front that you will run parallel investigators, and get approval in Step 3.
 
 ## Procedure
 
-1. **Fix the symptom** (Opus): extract the symptom from the utterance/args; if insufficient, AskUserQuestion.
-2. **Derive hypotheses** (Opus): 3-5 hypotheses that are mutually independent, mutually exclusive, testable, falsifiable, and specific ("stale DNS cache", not "environment issue"). To avoid gaps, sweep each category once: code/logic (boundary conditions, off-by-one), state/data (migrations, cache), environment/config (env vars, permissions, dependency versions), concurrency/timing (race, deadlock, retry storm), infra/network (DNS, TLS, proxy, rate limit), human factors (recent changes, deploys, manual intervention), external dependencies (third-party APIs, monitoring blind spots).
-3. **Approval**: present the hypothesis list to the user and get approval to proceed via AskUserQuestion.
-4. **Parallel spawn** (Opus): spawn one `subagent_type: "general-purpose"` Agent per hypothesis **in parallel in one message**. The team forms automatically on the first spawn (`TeamCreate`/`TeamDelete` removed in v2.1.178).
-   - No `explore`: it lacks `SendMessage` and cannot report.
-   - If Agents from another task are active (check with `ListAgents`), prefix names with `mh-{N}` and give hypothesis Agents only this RCA's scope. If it's unclear whether to run concurrently, ask the user "run concurrently / wait".
-5. **Investigate** (teammates): look for disconfirming evidence first, with no depth limit, until reaching a verifiable conclusion. If new sub-hypotheses emerge, recursively spawn additional `general-purpose` Agents. Delegate to Codex if needed (below).
-6. **Report** (teammates): report to Opus via `SendMessage`.
-7. **Synthesize** (Opus): no conclusion before every branch finishes. Fit the format to the shape of the result (no fixed template): single cause -> narrative + appendix of refuted hypotheses / multiple causes -> causal diagram or hypothesis x contribution table / all INCONCLUSIVE -> hypothesis x needed-evidence table / branching by depth -> tree / interactions between hypotheses -> matrix.
-8. **Cleanup**: confirm every Agent this RCA spawned has finished reporting. On error/abort, send shutdown_request/cancel only to those Agents. **Do not touch Agents from other tasks** (context loss).
+1. **Fix the symptom**: from the request or args; if insufficient, AskUserQuestion (what happens, since when, who is affected, what changed).
+2. **Derive 3-5 hypotheses**: independent, mutually exclusive where possible, testable, falsifiable, specific ("stale DNS cache", not "environment issue"). Sweep each category once to avoid gaps: code/logic (boundaries, off-by-one), state/data (migrations, cache), environment/config (env vars, permissions, dependency versions), concurrency/timing (races, deadlocks, retry storms), infra/network (DNS, TLS, proxy, rate limits), human factors (recent changes, deploys, manual steps), external dependencies (third-party APIs, monitoring blind spots).
+3. **Approval**: show the hypotheses and get approval via AskUserQuestion.
+4. **Parallel spawn**: one `general-purpose` Agent per hypothesis, **all in one message**, using the template below. Investigators can use a cheaper model (e.g. `model: sonnet`) than the main session. Their final message is their report.
+   - If agents from other work are running, give yours distinct names (`mh-1`...) and pass only this RCA's scope.
+5. **Investigate** (each agent): disconfirming evidence first, no depth limit, until a verifiable conclusion. A real sub-hypothesis may get its own sub-agent.
+6. **Synthesize** (you): no conclusion until every line of inquiry has reported. Shape the report to the result, no fixed template: single cause → narrative + appendix of refuted hypotheses; several causes → causal diagram or hypothesis × contribution table; all INCONCLUSIVE → hypothesis × evidence-needed table; interacting causes → matrix.
+7. **Cleanup**: confirm all agents this RCA started have finished; on abort, stop only those. **Never touch agents from other work.**
 
-## Codex delegation (optional, teammates only)
+## Optional: Codex delegation (investigators only)
 
-Use only when a Codex delegation plugin such as [codex-core](https://github.com/sanghyun-io/codex-app-server-plugin) is installed. Otherwise skip this section and investigate with Glob/Grep/Read/Bash. Opus never calls Codex directly; teammates must delegate.
+Only if a Codex delegation plugin such as [codex-core](https://github.com/sanghyun-io/codex-app-server-plugin) is installed; otherwise skip and use Glob/Grep/Read/Bash.
+- Converging on INCONCLUSIVE and the cause may be deep in code behavior → `/codex-core:delegate --read-only` before concluding.
+- Grep-level lookups → do them directly.
+- Codex unavailable or failing → investigate as far as possible, and if still INCONCLUSIVE state why Codex was needed, why it was unavailable, and the next concrete verification step (file, query, experiment).
 
-- Converging on INCONCLUSIVE and internal code behavior may be the cause -> delegate via `/codex-core:delegate --read-only` before concluding.
-- Security/vulnerability perspective needed -> teammates lack red-review permission, so escalate to Opus.
-- Simple grep/glob-level work -> handle directly (calling Codex wastes tokens).
-- Codex failure (not installed / auth failure -> `codex login` / rate limit / crash) -> investigate as far as possible with Glob/Grep/Read/Bash; if still INCONCLUSIVE, report stating **why Codex is needed / why it was unavailable / next verification action (specific files, queries, experiments)**.
-
-## Teammate prompt template
+## Investigator prompt template
 
 ```
-You are a Sonnet investigator on a multi-hypothesis RCA team.
+You are one investigator on a multi-hypothesis root cause analysis. Analysis only: do not propose fixes.
 
-## Your Hypothesis
-{Hypothesis N: one-line summary + detailed definition}
+Hypothesis: {N: one-line summary + precise definition}
+Symptoms / observations: {full symptom context}
+Other hypotheses being checked in parallel (don't duplicate them): {list}
 
-## Symptoms / Observations
-{full symptom context}
+Job:
+1. Look for evidence that would REFUTE this hypothesis first, then for confirming evidence.
+2. Go as deep as needed to reach a verifiable conclusion.
+3. If a distinct sub-hypothesis appears, you may spawn a general-purpose sub-agent for it.
 
-## Your Job
-1. Investigate this hypothesis in depth. No depth limit.
-2. Look for disconfirming evidence first.
-3. If new sub-hypotheses emerge, recursively spawn general-purpose agents.
-4. If deep code analysis is needed and a Codex delegation plugin is available, delegate via /codex-core:delegate --read-only.
-5. Analysis only: do not propose recovery/fixes.
-6. Report results to the manager via SendMessage.
-
-## Report Format
+Final report:
 - Conclusion: CONFIRMED / REFUTED / INCONCLUSIVE
-- Evidence: file path + line + quote
-- Falsification attempts: which observations could break this hypothesis + results of trying
-- Remaining uncertainty: what further digging could verify
-- Sub-hypotheses: summary of results from additionally spawned sub-agents
+- Evidence: file path + line + quote, or command + output
+- Falsification attempts: what could have broken the hypothesis, and what happened
+- Remaining uncertainty: what further checks would settle it
+- Sub-hypotheses: results from any sub-agents
 ```
 
-Example: `/multi-hypothesis only some users get 401 errors after deploy`
-
-*Created 2026-04-29 · Last modified 2026-10-06 (condensed; reflects v2.1.178 auto-team)*
+Example: `/multi-hypothesis:multi-hypothesis only some users get 401 errors after deploy`

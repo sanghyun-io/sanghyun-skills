@@ -1,7 +1,7 @@
 {
   "name": "plan-subdivider",
-  "description": "Structured planning system with automatic task subdivision for Claude Code",
-  "version": "1.2.1",
+  "description": "Splits a plan into ordered task files with checklists, verification steps, and prev/next links",
+  "version": "2.0.0",
   "author": {
     "name": "sanghyun-io",
     "email": "ppkimsanh@gmail.com"
@@ -9,5 +9,11 @@
   "homepage": "https://github.com/sanghyun-io/sanghyun-skills/tree/main/plugins/plan-subdivider",
   "repository": "https://github.com/sanghyun-io/sanghyun-skills",
   "license": "MIT",
-  "keywords": ["planning", "workflow", "task-management", "subdivision", "rules", "subdivider", "gtd", "productivity"]
+  "keywords": [
+    "planning",
+    "workflow",
+    "task-management",
+    "subdivision",
+    "productivity"
+  ]
 }

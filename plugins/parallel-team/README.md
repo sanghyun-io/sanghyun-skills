@@ -1,4 +1,4 @@
-# team-launch
+# parallel-team
 
 Run several independent coding tasks in parallel with you as the manager.
 
@@ -10,12 +10,16 @@ When you hand Claude the manager role, this skill splits N tasks into N git work
 
 ```
 /plugin marketplace add sanghyun-io/sanghyun-skills
-/plugin install team-launch@sanghyun-skills
+/plugin install parallel-team@sanghyun-skills
 ```
 
 ## Usage
 
-Say "Team Agent 구성해서 (너가 관리자)", "팀원들에게 분배", or "run these in parallel as a team".
+Say "Team Agent 구성해서 (너가 관리자)", "팀원들에게 분배", or "run these in parallel as a team", or run `/parallel-team:parallel-team <tasks>`.
+
+Base branch, ports, and commit language are read from the repo (default branch, dev-server config, recent commit history) rather than hard-coded.
+
+Formerly named `team-launch` (renamed in 2.0.0).
 
 Example prompts:
 - "Team Agent 구성해서 이 세 작업 병렬로 (너가 관리자)"

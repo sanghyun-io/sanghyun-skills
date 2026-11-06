@@ -184,14 +184,14 @@ claude --plugin-dir /path/to/your/plan-subdivider
 
 # Verify
 /plugin list
-/subdivide
+/plan-subdivider:plan-subdivide
 ```
 
 ### Test Checklist
 
 Before submitting PR:
 - [ ] Plugin installs successfully
-- [ ] `/subdivide` command works
+- [ ] `/plan-subdivider:plan-subdivide` command works
 - [ ] Rules are installed correctly
 - [ ] No errors in Claude Code debug mode
 - [ ] Documentation is updated

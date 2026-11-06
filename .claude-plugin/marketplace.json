@@ -9,7 +9,7 @@
     {
       "name": "plan-subdivider",
       "source": "./plugins/plan-subdivider",
-      "description": "Automatically breaks down large plans into manageable, sequential tasks with built-in checklists, verification steps, and navigation",
+      "description": "Splits a plan into ordered task files with checklists, verification steps, and prev/next links. No hooks.",
       "category": "productivity",
       "tags": [
         "planning",
@@ -37,7 +37,7 @@
     {
       "name": "multi-hypothesis",
       "source": "./plugins/multi-hypothesis",
-      "description": "Root cause analysis with multiple working hypotheses investigated in parallel by sub-agents instead of locking onto the first guess.",
+      "description": "Root cause analysis with several competing hypotheses investigated in parallel by sub-agents, disconfirming evidence first; analysis only.",
       "category": "productivity",
       "tags": [
         "rca",
@@ -62,7 +62,7 @@
     {
       "name": "skill-scaffolder",
       "source": "./plugins/skill-scaffolder",
-      "description": "Scaffold or refactor Claude Code skills with progressive disclosure, trigger-rich descriptions, and a references/ layout.",
+      "description": "Scaffold, restructure, and package Claude Code skills: bilingual trigger descriptions, references/ layout, and plugin/marketplace publishing.",
       "category": "development",
       "tags": [
         "skills",
@@ -83,9 +83,9 @@
       ]
     },
     {
-      "name": "team-launch",
-      "source": "./plugins/team-launch",
-      "description": "Manager pattern for running several independent coding tasks in parallel: one worktree and sub-agent per task, then integration checks and ordered merges.",
+      "name": "parallel-team",
+      "source": "./plugins/parallel-team",
+      "description": "Manager pattern for running several independent coding tasks in parallel: one worktree, port, and sub-agent per task, then integration checks, ordered merges, and safe cleanup.",
       "category": "development",
       "tags": [
         "multi-agent",
@@ -95,5 +95,8 @@
         "git"
       ]
     }
-  ]
+  ],
+  "renames": {
+    "team-launch": "parallel-team"
+  }
 }
