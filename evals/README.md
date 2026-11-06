@@ -23,6 +23,7 @@ Baseline = skills at `2b70c3f` (before the review fixes in #7).
 
 | skill | version | should trigger | should not trigger |
 |---|---|---|---|
+| multi-hypothesis | 1.3.0 (agent-agnostic, model tiers) | 21/21 | 21/21 |
 | multi-hypothesis | 1.2.1 (intermittent/flaky trigger) | 21/21 | 21/21 |
 | multi-hypothesis | 1.2.0 | 18/21 | 21/21 |
 | multi-hypothesis | baseline | 10/21 | 21/21 |

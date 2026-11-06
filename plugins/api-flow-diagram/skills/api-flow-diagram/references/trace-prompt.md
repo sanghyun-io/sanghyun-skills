@@ -1,6 +1,6 @@
 # Call tracing prompt
 
-Following FE·BE code screen by screen to the end reads many files. If your agent can start sub-agents, hand this to one and keep only verification and rendering in the main session (Claude Code: `Agent` with `subagent_type: "general-purpose"`, e.g. `model: "sonnet"`; other agents: their sub-agent or task feature). If not, follow the same prompt yourself as a checklist. Fill in the following.
+Following FE·BE code screen by screen to the end reads many files. If your agent can start sub-agents, hand this to one and keep only verification and rendering in the main session (Claude Code: `Agent` with `subagent_type: "general-purpose"` and a fast or balanced model from those available; other agents: their sub-agent or task feature). If not, follow the same prompt yourself as a checklist. Fill in the following.
 
 ```text
 Read-only investigation. No code edits, commits, running servers, DB access, or opening .env.

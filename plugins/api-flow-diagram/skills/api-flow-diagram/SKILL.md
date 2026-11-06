@@ -14,7 +14,8 @@ Works with any coding agent (Claude Code, Codex, others). All paths below are re
 
 ## Rules
 
-- DO: if your agent can start sub-agents, delegate tracing to one (a cheaper model is fine) with [trace-prompt](references/trace-prompt.md); otherwise trace yourself using the same prompt as a checklist. Either way, verify 2–3 key claims at file:line yourself before drawing.
+- DO: if your agent can start sub-agents, delegate tracing to one with [trace-prompt](references/trace-prompt.md); otherwise trace yourself using the same prompt as a checklist. Either way, verify 2–3 key claims at file:line yourself before drawing.
+- DO: tracing is mostly reading and searching code, so give it a fast or balanced model; keep verification and the final conclusions on the strongest model you have. Pick from the models this agent actually offers (rough tiers: fast/cheap = Haiku-, mini-, flash-class; balanced = Sonnet-class; strongest = Opus-class or top reasoning models); don't assume a name.
 - DO: record the base commit (deployed sha) in `meta`. Auth and branches change per commit.
 - DO: auth not confirmed in code → `auth.level: "unknown"`. Guesses get "(guess)" in note.
 - DO: output as local files in a git-ignored temp folder of the project (e.g. `tmp-debug/`).

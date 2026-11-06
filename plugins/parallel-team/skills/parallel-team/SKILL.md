@@ -15,7 +15,7 @@ Being made "manager" means owning the organization, not just spawning agents: re
 - **Base branch**: the repo default (`git symbolic-ref refs/remotes/origin/HEAD`), not a hard-coded `main`.
 - **Ports**: the project's dev port from its config; teammates get base+1, base+2, ... Up to 5 teammates; more than that, serialize.
 - **Commit and report language**: follow the repo's recent commit history and the user's language.
-- **Models**: you run in the main session; teammates can use a cheaper model (e.g. `model: sonnet`) for well-specified tasks.
+- **Models**: keep conflict analysis, merge order, and integration judgment on the strongest model you have. Teammates implement: a balanced tier suits well-specified tasks, the strongest for tricky ones; pure lookups can go to the cheapest tier. Pick from the models this agent actually offers (rough tiers: fast/cheap = Haiku-, mini-, flash-class; balanced = Sonnet-class; strongest = Opus-class or top reasoning models); don't assume a name.
 
 ## Procedure
 
