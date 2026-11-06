@@ -15,10 +15,19 @@ The layout code is fixed (`assets/template.html`); only a data JSON changes. `sc
 /plugin install api-flow-diagram@sanghyun-skills
 ```
 
+### Other agents (Codex and others)
+
+The skill is plain `SKILL.md` + Python, so any agent that reads skill folders can use it. Copy (or link) `skills/api-flow-diagram/` into that agent's skills directory, e.g. for Codex:
+
+```bash
+git clone https://github.com/sanghyun-io/sanghyun-skills.git
+cp -r sanghyun-skills/plugins/api-flow-diagram/skills/api-flow-diagram ~/.agents/skills/
+```
+
 ## Usage
 
 ```bash
-# <skill dir> = ~/.claude/plugins/cache/sanghyun-skills/api-flow-diagram/<version>/skills/api-flow-diagram
+# <skill dir> = the installed skill folder, e.g. ~/.claude/plugins/cache/sanghyun-skills/api-flow-diagram/<version>/skills/api-flow-diagram or ~/.agents/skills/api-flow-diagram
 python "<skill dir>/scripts/render.py" flow.json flow.html
 python "<skill dir>/scripts/render.py" --self-test
 ```
@@ -30,7 +39,7 @@ Example prompts:
 
 ## Requirements
 
-Python 3.9+ (standard library only). A browser automation tool (Playwright) is optional, for visual checks.
+Python 3.9+ (standard library only). Sub-agents and a browser automation tool are optional: without sub-agents the agent traces the code itself, without a browser tool it skips the visual check and says so.
 
 ## License
 
